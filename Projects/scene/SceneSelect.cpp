@@ -384,7 +384,7 @@ void SceneSelect::Draw()
 
 		if (SaveDataManager::GetInstance().IsRelease(Game::e_PlayerKind::kRassPlayer))
 		{
-			DrawGraph(kHitStarPos.x, kHitStarPos.y , m_handles[kSpeedClearItemH], true);
+			DrawGraph(kHitStarPos.x, kHitStarPos.y + 40 , m_handles[kSpeedClearItemH], true);
 		}
 
 	}

@@ -28,29 +28,17 @@
     <Filter Include="ヘッダー ファイル\object">
       <UniqueIdentifier>{9edadc2e-3d4f-46b8-bff8-9628309907a4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\object">
-      <UniqueIdentifier>{c65f7591-fe62-47a0-b7d8-7f07dbae06ee}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\ui">
       <UniqueIdentifier>{fdc75016-ec61-4df4-83e4-626090a30cca}</UniqueIdentifier>
     </Filter>
     <Filter Include="ヘッダー ファイル\ui">
       <UniqueIdentifier>{8b5d3e3f-e322-42e2-b2be-953696603440}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\object\player">
-      <UniqueIdentifier>{ea35bc6f-6416-4785-bad6-7d4d22e0842d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\object\boss">
-      <UniqueIdentifier>{f7b4f7a9-2e79-498c-9450-ab2705c8472c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ヘッダー ファイル\object\player">
       <UniqueIdentifier>{16eb3663-2808-4cfe-947a-8cfb754ef642}</UniqueIdentifier>
     </Filter>
     <Filter Include="ヘッダー ファイル\object\boss">
       <UniqueIdentifier>{135e1ad1-d56e-4e5e-b88e-79057e065fe1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\object\item">
-      <UniqueIdentifier>{1800bdca-3dc7-4e50-ac91-0009b3e3d60e}</UniqueIdentifier>
     </Filter>
     <Filter Include="ヘッダー ファイル\object\item">
       <UniqueIdentifier>{abb822f2-c72f-477b-bbb6-b3284ac053a0}</UniqueIdentifier>
@@ -61,29 +49,41 @@
     <Filter Include="ソース ファイル\myLib">
       <UniqueIdentifier>{f4bf15a2-b8e1-4f06-b113-494134f39c37}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\object\weapon">
-      <UniqueIdentifier>{be7be85c-40c5-4fe5-8a69-2b70400e813a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ヘッダー ファイル\object\weapon">
       <UniqueIdentifier>{4a628768-4d92-47ba-9de2-3ddc749b701d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\object\stage">
-      <UniqueIdentifier>{774fc939-23d0-4125-ad5e-aff0564864a5}</UniqueIdentifier>
     </Filter>
     <Filter Include="ヘッダー ファイル\object\stage">
       <UniqueIdentifier>{17b196ff-7941-457f-8c7f-af5325170c22}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\object\face">
-      <UniqueIdentifier>{07fca25c-9af8-4004-9faf-479ca2130ffd}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ヘッダー ファイル\object\face">
       <UniqueIdentifier>{90156e82-432e-4f8b-8427-578805bf931b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\object\shot">
-      <UniqueIdentifier>{e1666975-3d42-46b0-bc23-01c264b4c9f1}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ヘッダー ファイル\object\shot">
       <UniqueIdentifier>{245245f0-6f26-485c-a802-c6ec917e5582}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\object">
+      <UniqueIdentifier>{c65f7591-fe62-47a0-b7d8-7f07dbae06ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\object\player">
+      <UniqueIdentifier>{ea35bc6f-6416-4785-bad6-7d4d22e0842d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\object\boss">
+      <UniqueIdentifier>{f7b4f7a9-2e79-498c-9450-ab2705c8472c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\object\item">
+      <UniqueIdentifier>{1800bdca-3dc7-4e50-ac91-0009b3e3d60e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\object\weapon">
+      <UniqueIdentifier>{be7be85c-40c5-4fe5-8a69-2b70400e813a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\object\stage">
+      <UniqueIdentifier>{774fc939-23d0-4125-ad5e-aff0564864a5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\object\face">
+      <UniqueIdentifier>{07fca25c-9af8-4004-9faf-479ca2130ffd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\object\shot">
+      <UniqueIdentifier>{e1666975-3d42-46b0-bc23-01c264b4c9f1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
