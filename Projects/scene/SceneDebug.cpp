@@ -3,13 +3,13 @@
 #include "scene/SceneManager.h"
 #include "scene/SceneDebug.h"
 #include "scene/SceneTitle.h"
+#include "scene/SceneTutorial.h"
 #include "scene/SceneSelect.h"
 #include "scene/SceneGamePlay.h"
 #include "scene/SceneGameClear.h"
 #include "scene/SceneGameOver.h"
 #include "scene/SceneOption.h"
 #include "scene/ScenePause.h"
-
 
 #include "util/Pad.h"
 
@@ -18,6 +18,10 @@ namespace
 	constexpr int kTextX = 64;
 	constexpr int kTextBlankSpaceY = 32;
 	constexpr int kTextIntervalY = 24;
+
+	//プレイヤーの最初の位置
+	constexpr VECTOR kPlayerPos = { 400.0f,-35.0f,740.0f };
+	constexpr VECTOR kTutorialPlayerPos = { 800.0f,-35.0f,0.0f };
 }
 
 SceneDebug::SceneDebug(SceneManager& manager) :
@@ -105,9 +109,15 @@ void SceneDebug::Update()
 			return;
 		}
 
+		if (m_sceneTrans == e_SceneTrans::kTutorial)
+		{
+			m_pManager.ChangeScene(std::make_shared<SceneTutorial>(m_pManager, Game::e_StageKind::kTutorial));
+			return;
+		}
+
 		if (m_sceneTrans == e_SceneTrans::kSelect)
 		{
-			m_pManager.ChangeScene(std::make_shared<SceneSelect>(m_pManager, Game::e_StageKind::kSelect));
+			m_pManager.ChangeScene(std::make_shared<SceneSelect>(m_pManager, Game::e_StageKind::kSelect, kPlayerPos));
 			return;
 		}
 
@@ -169,6 +179,7 @@ void SceneDebug::Draw()
 
 	DrawFormatString(kTextX, kTextBlankSpaceY + static_cast<int>(e_SceneTrans::kDebug) * kTextIntervalY, 0xffffff, "Scene Debug");
 	DrawFormatString(kTextX, kTextBlankSpaceY + static_cast<int>(e_SceneTrans::kTitle) * kTextIntervalY, 0xffffff, "Scene Title");
+	DrawFormatString(kTextX, kTextBlankSpaceY + static_cast<int>(e_SceneTrans::kTutorial) * kTextIntervalY, 0xffffff, "Scene Tutorial");
 	DrawFormatString(kTextX, kTextBlankSpaceY + static_cast<int>(e_SceneTrans::kSelect) * kTextIntervalY, 0xffffff, "Scene Select");
 	DrawFormatString(kTextX, kTextBlankSpaceY + static_cast<int>(e_SceneTrans::kGamePlayPower) * kTextIntervalY, 0xffffff, "Scene Game Play PowerBoss");
 	DrawFormatString(kTextX, kTextBlankSpaceY + static_cast<int>(e_SceneTrans::kGamePlaySpeed) * kTextIntervalY, 0xffffff, "Scene Game Play SpeedBoss");

@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include "SceneBase.h"
+#include "scene/SceneBase.h"
 #include <vector>
 #include <memory>
 
@@ -27,6 +27,7 @@ private:
 	{
 		kDebug,
 		kTitle,
+		kTutorial,
 		kSelect,
 		kGamePlayPower,
 		kGamePlaySpeed,
@@ -43,7 +44,7 @@ private:
 	//押したかどうか
 	bool m_isPush;
 
+	//シーン遷移種類
 	e_SceneTrans m_sceneTrans;
-
 };
 

@@ -144,7 +144,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
-    <ClCompile Include="myLib\AttackCol.cpp" />
     <ClCompile Include="myLib\Collidable.cpp" />
     <ClCompile Include="myLib\ColliderDataCapsule.cpp" />
     <ClCompile Include="myLib\ColliderDataLine.cpp" />
@@ -157,10 +156,12 @@
     <ClCompile Include="object\boss\BossRast.cpp" />
     <ClCompile Include="object\boss\BossShot.cpp" />
     <ClCompile Include="object\boss\BossSpeed.cpp" />
+    <ClCompile Include="object\boss\BossTutorial.cpp" />
     <ClCompile Include="object\Camera.cpp" />
-    <ClCompile Include="object\Camera2.cpp" />
     <ClCompile Include="object\CameraProduction.cpp" />
     <ClCompile Include="object\CharaBase.cpp" />
+    <ClCompile Include="object\enemy\EnemyBase.cpp" />
+    <ClCompile Include="object\enemy\EnemyNormal.cpp" />
     <ClCompile Include="object\item\ItemBase.cpp" />
     <ClCompile Include="object\item\ItemHp.cpp" />
     <ClCompile Include="object\item\ItemMp.cpp" />
@@ -174,10 +175,6 @@
     <ClCompile Include="object\stage\SkyDome.cpp" />
     <ClCompile Include="object\stage\TitleField.cpp" />
     <ClCompile Include="object\stage\Tomb.cpp" />
-    <ClCompile Include="object\weapon\Axe.cpp" />
-    <ClCompile Include="object\weapon\Dagger.cpp" />
-    <ClCompile Include="object\weapon\Sword.cpp" />
-    <ClCompile Include="object\weapon\WeaponBase.cpp" />
     <ClCompile Include="scene\SceneBase.cpp" />
     <ClCompile Include="scene\SceneDebug.cpp" />
     <ClCompile Include="scene\SceneGameClear.cpp" />
@@ -187,7 +184,10 @@
     <ClCompile Include="scene\SceneOption.cpp" />
     <ClCompile Include="scene\ScenePause.cpp" />
     <ClCompile Include="scene\SceneSelect.cpp" />
+    <ClCompile Include="scene\SceneStory.cpp" />
     <ClCompile Include="scene\SceneTitle.cpp" />
+    <ClCompile Include="scene\SceneTutorial.cpp" />
+    <ClCompile Include="scene\SceneWords.cpp" />
     <ClCompile Include="ui\ButtonUi.cpp" />
     <ClCompile Include="ui\FaceFrameUi.cpp" />
     <ClCompile Include="ui\FaceUi.cpp" />
@@ -207,10 +207,8 @@
     <ClCompile Include="util\StringUtility.cpp" />
     <ClCompile Include="util\Time.cpp" />
     <ClCompile Include="util\Vec2.cpp" />
-    <ClCompile Include="util\Vec3.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="myLib\AttackCol.h" />
     <ClInclude Include="myLib\Collidable.h" />
     <ClInclude Include="myLib\ColliderData.h" />
     <ClInclude Include="myLib\ColliderDataCapsule.h" />
@@ -227,10 +225,12 @@
     <ClInclude Include="object\boss\BossRast.h" />
     <ClInclude Include="object\boss\BossShot.h" />
     <ClInclude Include="object\boss\BossSpeed.h" />
+    <ClInclude Include="object\boss\BossTutorial.h" />
     <ClInclude Include="object\Camera.h" />
-    <ClInclude Include="object\Camera2.h" />
     <ClInclude Include="object\CameraProduction.h" />
     <ClInclude Include="object\CharaBase.h" />
+    <ClInclude Include="object\enemy\EnemyBase.h" />
+    <ClInclude Include="object\enemy\EnemyNormal.h" />
     <ClInclude Include="object\item\ItemBase.h" />
     <ClInclude Include="object\item\ItemHp.h" />
     <ClInclude Include="object\item\ItemMp.h" />
@@ -244,10 +244,6 @@
     <ClInclude Include="object\stage\SkyDome.h" />
     <ClInclude Include="object\stage\TitleField.h" />
     <ClInclude Include="object\stage\Tomb.h" />
-    <ClInclude Include="object\weapon\Axe.h" />
-    <ClInclude Include="object\weapon\Dagger.h" />
-    <ClInclude Include="object\weapon\Sword.h" />
-    <ClInclude Include="object\weapon\WeaponBase.h" />
     <ClInclude Include="scene\SceneBase.h" />
     <ClInclude Include="scene\SceneDebug.h" />
     <ClInclude Include="scene\SceneGameClear.h" />
@@ -257,7 +253,10 @@
     <ClInclude Include="scene\SceneOption.h" />
     <ClInclude Include="scene\ScenePause.h" />
     <ClInclude Include="scene\SceneSelect.h" />
+    <ClInclude Include="scene\SceneStory.h" />
     <ClInclude Include="scene\SceneTitle.h" />
+    <ClInclude Include="scene\SceneTutorial.h" />
+    <ClInclude Include="scene\SceneWords.h" />
     <ClInclude Include="ui\ButtonUi.h" />
     <ClInclude Include="ui\FaceFrameUi.h" />
     <ClInclude Include="ui\FaceUi.h" />
@@ -278,7 +277,6 @@
     <ClInclude Include="util\StringUtility.h" />
     <ClInclude Include="util\Time.h" />
     <ClInclude Include="util\Vec2.h" />
-    <ClInclude Include="util\Vec3.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

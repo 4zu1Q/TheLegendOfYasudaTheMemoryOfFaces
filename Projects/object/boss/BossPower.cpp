@@ -15,6 +15,7 @@ namespace
 {
 	//プレイヤーのモデルファイル名
 	const char* const kModelFilename = "Data/Model/Boss/BossPower.mv1";
+
 	//モデルのスケール値
 	constexpr float kModelScale = 8.0f;
 
@@ -32,22 +33,17 @@ namespace
 	constexpr VECTOR kUpPos = { 0.0f,18.0f,0.0f };
 
 	/*ボスのアニメーションの種類*/
-	const char* const kAnimBossInfoFilename = "Data/Master/AnimBossPowerMaster.csv";
+	const char* const kAnimBossInfoFilename = "Data/Csv/AnimBossPower.csv";
 
 	const char* const kAnimIdle = "Idle";
 	const char* const kAnimWalk = "Walk";
 	const char* const kAnimDash = "Dash";
-
 	const char* const kAnimAttack1 = "Attack1";
 	const char* const kAnimAttack2 = "Attack2";
 	const char* const kAnimAttack3 = "Attack3";
-
 	const char* const kAnimAvoid = "Avoid";
-
 	const char* const kAnimCoolTime = "CoolTime";
-
 	const char* const kAnimHit = "Hit";
-
 	const char* const kAnimDown = "Down";
 	const char* const kAnimDead = "Dead";
 
@@ -205,16 +201,9 @@ void BossPower::Update(std::shared_ptr<MyLib::Physics> physics, Player& player, 
 		m_isHit = false;
 	}
 
-
 	m_playerPos = player.GetPos();
 	m_pos = m_rigidbody.GetPos();
 	m_hitPos = VGet(m_pos.x, m_pos.y + 6.0f, m_pos.z);
-	//m_attackPos = VGet(m_attackPos.x, m_attackPos.y + m_hitPos.y, m_attackPos.z);
-	//m_shockAttackPos = m_pos;
-	//auto pos = m_rigidbody.GetPos();
-
-	//モデルのポジションを合わせるよう
-	//VECTOR modelPos = VGet(pos.x, pos.y, pos.z);
 
 	m_posUp = VGet(m_pos.x, m_pos.y + kUpPos.y, m_pos.z);
 
@@ -254,6 +243,11 @@ void BossPower::Draw()
 	DrawSphere3D(m_attackPos, m_weaponAttackRadius, 16, 0xff00ff, 0xffffff, false);
 	DrawSphere3D(m_shockAttackPos, m_shockRadius, 16, 0xff00ff, 0xffffff, false);
 
+	if (m_isHit)
+	{
+		DrawSphere3D(m_hitPos, m_hitRadius, 16, 0xff00ff, 0xffffff, false);
+	}
+
 	if (m_isAttack)
 	{
 		if (m_attackKind == Game::e_BossAttackKind::kBossAttack) DrawSphere3D(m_attackPos, m_normalAttackRadius, 16, 0xffff00, 0xffffff, false);
@@ -270,7 +264,7 @@ void BossPower::Draw()
 	// 3: 非表示
 	// 4: 表示される	...
 	// % 4 することで012301230123... に変換する
-	if (m_damageFrame % 8 >= 4) return;
+	//if (m_damageFrame % 8 >= 4) return;
 
 	if (!m_isClear)
 	{

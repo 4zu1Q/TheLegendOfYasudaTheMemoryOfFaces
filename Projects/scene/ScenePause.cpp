@@ -9,7 +9,6 @@
 #include "util/Game.h"
 #include "util/Pad.h"
 #include "util/SoundManager.h"
-#include "util/SaveDataManager.h"
 
 namespace
 {
@@ -30,6 +29,9 @@ namespace
 	const Vec2 kOptionSelectPos = { 110 , 315 };
 	const Vec2 kSelectSelectPos = { 110 , 430 };
 	const Vec2 kTitleSelectPos = { 110 , 550 };
+
+	//プレイヤーの最初の位置
+	constexpr VECTOR kPlayerPos = { 400.0f,-35.0f,740.0f };
 
 	//ポーズの背景アルファ値
 	constexpr int kAlpha = 200;
@@ -84,7 +86,6 @@ ScenePause::~ScenePause()
 	{
 		DeleteGraph(m_handles[i]);
 	}
-
 
 	m_handles.clear();
 }
@@ -195,7 +196,6 @@ void ScenePause::Update()
 				SoundManager::GetInstance().StopBgm("selectBgm");
 				StartFadeOut();	//フェードアウト開始
 				m_isToNextScene = true;
-				//SaveDataManager::GetInstance().Save(); //セーブデータの保存
 			}
 		}
 
@@ -216,7 +216,7 @@ void ScenePause::Update()
 		{
 			if (m_sceneTrans == e_SceneTrans::kSelect)
 			{
-				m_pManager.ChangeAndClearScene(std::make_shared<SceneSelect>(m_pManager,Game::e_StageKind::kSelect));
+				m_pManager.ChangeAndClearScene(std::make_shared<SceneSelect>(m_pManager,Game::e_StageKind::kSelect, kPlayerPos));
 				return;
 			}
 			else if (m_sceneTrans == e_SceneTrans::kTitle)
@@ -241,19 +241,6 @@ void ScenePause::Draw()
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 
 	DrawGraph(0, 0, m_handles[kPauseBarH], true);
-
-#ifdef _DEBUG
-
-	DrawFormatString(kTextX / 2, kTextBlankSpaceY + static_cast<int>(m_sceneTrans) * kTextIntervalY, 0xff0000, "→");
-
-	DrawFormatString(kTextX, kTextBlankSpaceY + static_cast<int>(e_SceneTrans::kRestart) * kTextIntervalY, 0xffffff, "Restart");
-	DrawFormatString(kTextX, kTextBlankSpaceY + static_cast<int>(e_SceneTrans::kOption) * kTextIntervalY, 0xffffff, "Option");
-	DrawFormatString(kTextX, kTextBlankSpaceY + static_cast<int>(e_SceneTrans::kSelect) * kTextIntervalY, 0xffffff, "Select");
-	DrawFormatString(kTextX, kTextBlankSpaceY + static_cast<int>(e_SceneTrans::kTitle) * kTextIntervalY, 0xffffff, "Title");
-
-	DrawString(0, 0, "Scene Pause", 0xffffff, false);
-
-#endif
 
 	DrawGraph(kPausePos.x, kPausePos.y, m_handles[kPauseH], true);
 	DrawGraph(kBackPos.x, kBackPos.y, m_handles[kBackH], true);
@@ -300,6 +287,19 @@ void ScenePause::Draw()
 	}
 
 	DrawFade(0x000000);
+
+#ifdef _DEBUG
+
+	DrawFormatString(kTextX / 2, kTextBlankSpaceY + static_cast<int>(m_sceneTrans) * kTextIntervalY, 0xff0000, "→");
+
+	DrawFormatString(kTextX, kTextBlankSpaceY + static_cast<int>(e_SceneTrans::kRestart) * kTextIntervalY, 0xffffff, "Restart");
+	DrawFormatString(kTextX, kTextBlankSpaceY + static_cast<int>(e_SceneTrans::kOption) * kTextIntervalY, 0xffffff, "Option");
+	DrawFormatString(kTextX, kTextBlankSpaceY + static_cast<int>(e_SceneTrans::kSelect) * kTextIntervalY, 0xffffff, "Select");
+	DrawFormatString(kTextX, kTextBlankSpaceY + static_cast<int>(e_SceneTrans::kTitle) * kTextIntervalY, 0xffffff, "Title");
+
+	DrawString(0, 0, "Scene Pause", 0xffffff, false);
+
+#endif
 
 }
 

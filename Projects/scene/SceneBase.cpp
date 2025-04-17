@@ -1,4 +1,5 @@
 ﻿#include "SceneBase.h"
+
 #include "util/Game.h"
 
 #include "util/SoundManager.h"
@@ -15,6 +16,11 @@ namespace
 
 	constexpr float kCursorSpeed = 0.2f;
 
+	constexpr int kFadeMax = 255;
+	constexpr int kFadeTime = 120;
+	constexpr int kFadeNum = 2;
+
+	
 
 }
 
@@ -76,35 +82,49 @@ SceneBase::SceneBase(SceneManager& manager):
 	SoundManager::GetInstance().Load("bossFootStepsSe", "Data/Sound/Se/Back.mp3", false);
 	SoundManager::GetInstance().Load("bossFootStepsSe", "Data/Sound/Se/Back.mp3", false);
 	SoundManager::GetInstance().Load("bossFootStepsSe", "Data/Sound/Se/Back.mp3", false);
-	//SoundManager::GetInstance().Load("backSe", "Data/Sound/Se/Back.mp3", false);
-	//SoundManager::GetInstance().Load("backSe", "Data/Sound/Se/Back.mp3", false);
 
 	/*エフェクトのロード*/
+
+	//プレイヤーエフェクト
 	EffectManager::GetInstance().Load("playerHitEffect", "Data/Effect/PlayerHit.efkefc", 120, 6.0f);
-	EffectManager::GetInstance().Load("bossHitEffect", "Data/Effect/BossHit.efkefc", 120, 2.0f);
-	EffectManager::GetInstance().Load("hpHitEffect", "Data/Effect/HpHeal.efkefc", 120, 5.0f);
-	EffectManager::GetInstance().Load("mpHitEffect", "Data/Effect/MpHeal.efkefc", 120 , 5.0f);
-	EffectManager::GetInstance().Load("shotEffect", "Data/Effect/Charge.efkefc", 120, 1.0f);
 	EffectManager::GetInstance().Load("moveEffect", "Data/Effect/Move.efkefc", 120, 1.0f);
 	EffectManager::GetInstance().Load("jumpEffect", "Data/Effect/Jump.efkefc", 120, 2.0f);
-	EffectManager::GetInstance().Load("gameClearEffect", "Data/Effect/StageClear01.efkefc", 200, 4.0f);
-	EffectManager::GetInstance().Load("gameOverEffect", "Data/Effect/PlayerHit.efkefc", 120, 1.0f);
-	EffectManager::GetInstance().Load("attackChargeEffect", "Data/Effect/AttackCharge.efkefc", 60, 8.0f);
+	EffectManager::GetInstance().Load("hpHitEffect", "Data/Effect/HpHeal.efkefc", 120, 5.0f);
+	EffectManager::GetInstance().Load("mpHitEffect", "Data/Effect/MpHeal.efkefc", 120 , 5.0f);
+	EffectManager::GetInstance().Load("faceUseEffect", "Data/Effect/FaceUse01.efkefc", 120, 1.5f);
+
+	//プレイヤーの攻撃エフェクト
+	EffectManager::GetInstance().Load("attackChargeEffect", "Data/Effect/AttackCharge.efkefc", 60, 4.0f);
 	EffectManager::GetInstance().Load("attackChargeFinishEffect", "Data/Effect/ChargeFinish.efkefc", 120, 2.0f);
 	EffectManager::GetInstance().Load("attackYEffect", "Data/Effect/PlayerShockAttack.efkefc", 40, 5.0f);
+
 	EffectManager::GetInstance().Load("playerShockEffect", "Data/Effect/PlayerShockAttack.efkefc", 120, 1.0f);
+	EffectManager::GetInstance().Load("shotPlayerAttackXEffect", "Data/Effect/ShotPlayerAttackX.efkefc", 60, 2.5f);
+	EffectManager::GetInstance().Load("shotPlayerAttackYEffect", "Data/Effect/ShotPlayerAttackY2.efkefc", 120, 4.0f);
+	EffectManager::GetInstance().Load("speedPlayerAttackYEffect", "Data/Effect/AttackY.efkefc", 120, 4.0f);
+
+	//ボスエフェクト
+	EffectManager::GetInstance().Load("bossHitEffect", "Data/Effect/BossHit.efkefc", 120, 2.0f);
+
+	//ボスの攻撃エフェクト
 	EffectManager::GetInstance().Load("bossShockEffect", "Data/Effect/BossShockAttack.efkefc", 160, 4.0f);
-	EffectManager::GetInstance().Load("backGroundEffect", "Data/Effect/PlayerHit.efkefc", 120, 1.0f);
-	EffectManager::GetInstance().Load("faceUseEffect", "Data/Effect/FaceUse01.efkefc", 120, 1.5f);
+	EffectManager::GetInstance().Load("shotBossAttackEffect", "Data/Effect/ShotBossAttack.efkefc", 120, 5.5f);
 	EffectManager::GetInstance().Load("powerPreliminaryActionEffect", "Data/Effect/PowerPreliminaryAction.efkefc", 120, 3.0f);
 	EffectManager::GetInstance().Load("speedPreliminaryActionEffect", "Data/Effect/SpeedPreliminaryAction.efkefc", 120, 3.0f);
 	EffectManager::GetInstance().Load("shotPreliminaryActionEffect", "Data/Effect/ShotPreliminaryAction.efkefc", 120, 3.0f);
 	EffectManager::GetInstance().Load("rassPreliminaryActionEffect", "Data/Effect/RassPreliminaryAction.efkefc", 120, 3.0f);
-	EffectManager::GetInstance().Load("shotBossAttackEffect", "Data/Effect/ShotBossAttack.efkefc", 120, 5.5f);
-	EffectManager::GetInstance().Load("shotPlayerAttackXEffect", "Data/Effect/ShotPlayerAttackX.efkefc", 120, 4.5f);
-	EffectManager::GetInstance().Load("shotPlayerAttackYEffect", "Data/Effect/ShotPlayerAttackY2.efkefc", 120, 4.0f);
-	EffectManager::GetInstance().Load("speedPlayerAttackYEffect", "Data/Effect/AttackY.efkefc", 120, 4.0f);
-	EffectManager::GetInstance().Load("BossAttackShockEffect", "Data/Effect/BossShockAttack.efkefc", 120, 0.5f);
+	
+	//ステージエフェクト
+	EffectManager::GetInstance().Load("stagePower", "Data/Effect/StageSelectPower.efkefc", 210, 6.0f);
+	EffectManager::GetInstance().Load("stageSpeed", "Data/Effect/StageSelectSpeed.efkefc", 210, 6.0f);
+	EffectManager::GetInstance().Load("stageShot", "Data/Effect/StageSelectShot.efkefc", 210, 6.0f);
+	EffectManager::GetInstance().Load("stageRass", "Data/Effect/StageSelectRast.efkefc", 210, 9.0f);
+
+	//その他エフェクト
+	EffectManager::GetInstance().Load("gameClearEffect", "Data/Effect/StageClear01.efkefc", 200, 4.0f);
+	EffectManager::GetInstance().Load("gameOverEffect", "Data/Effect/PlayerHit.efkefc", 120, 1.0f);
+	EffectManager::GetInstance().Load("shotEffect", "Data/Effect/Charge.efkefc", 120, 1.0f);
+	EffectManager::GetInstance().Load("backGroundEffect", "Data/Effect/PlayerHit.efkefc", 120, 1.0f);
 
 }
 
@@ -113,9 +133,9 @@ void SceneBase::UpdateFade()
 
 	m_fadeBright += m_fadeSpeed;
 
-	if (m_fadeBright >= 255)
+	if (m_fadeBright >= kFadeMax)
 	{
-		m_fadeBright = 255;
+		m_fadeBright = kFadeMax;
 		if (m_fadeSpeed > 0)
 		{
 			m_fadeSpeed = 0;
@@ -164,7 +184,7 @@ bool SceneBase::IsFadingOut() const
 
 bool SceneBase::IsFinishFadeOut() const
 {
-	if (m_fadeBright == 255 && m_fadeSpeed == 0)
+	if (m_fadeBright == kFadeMax && m_fadeSpeed == 0)
 	{
 		return true;
 	}
@@ -180,14 +200,14 @@ void SceneBase::FadeInSkip()
 
 void SceneBase::FadeOutSkip()
 {
-	m_fadeBright = 255;
+	m_fadeBright = kFadeMax;
 	m_fadeSpeed = kFadeSpeed;
 }
 
 void SceneBase::UpdateFadeSelectGraph()
 {
 	// スタート指示を点滅させる
-	if (m_fadeGraphSelectTime == 120) 
+	if (m_fadeGraphSelectTime == kFadeTime)
 	{
 		m_fadeGraphSelectTime++;
 	}
@@ -195,20 +215,20 @@ void SceneBase::UpdateFadeSelectGraph()
 	{
 		m_fadeGraphSelectTime--;
 	}
-	else if (m_fadeGraphSelectTime % 2 == 0) 
+	else if (m_fadeGraphSelectTime % kFadeNum == 0)
 	{
-		m_fadeGraphSelectTime += 2;
+		m_fadeGraphSelectTime += kFadeNum;
 	}
 	else 
 	{
-		m_fadeGraphSelectTime -= 2;
+		m_fadeGraphSelectTime -= kFadeNum;
 	}
 }
 
 void SceneBase::DrawFadeSelectGraph(int graphHandle, Vec2 graphPos)
 {
 	// フェードしながら描画
-	int alpha = static_cast<int>(255 * ((float)m_fadeGraphSelectTime / 120));
+	int alpha = static_cast<int>(kFadeMax * ((float)m_fadeGraphSelectTime / kFadeTime));
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
 	// 画像の描画
 	DrawGraph(graphPos.x, graphPos.y, graphHandle, true);
@@ -217,27 +237,26 @@ void SceneBase::DrawFadeSelectGraph(int graphHandle, Vec2 graphPos)
 
 void SceneBase::FadeGraphSelectReset()
 {
-	m_fadeGraphSelectTime = 120;
+	m_fadeGraphSelectTime = kFadeTime;
 }
 
 void SceneBase::UpdateFadeGraphTitleLogo()
 {
 	// スタート指示を点滅させる
-	if (m_fadeGraphTitleTime == 120)
+	if (m_fadeGraphTitleTime == kFadeTime)
 	{
 		m_fadeGraphTitleTime++;
 	}
-	else if (m_fadeGraphTitleTime % 2 == 0)
+	else if (m_fadeGraphTitleTime % kFadeNum == 0)
 	{
-		m_fadeGraphTitleTime += 2;
+		m_fadeGraphTitleTime += kFadeNum;
 	}
-
 }
 
 void SceneBase::DrawFadeGraphTitleLogo(int graphHandle, Vec2 graphPos)
 {
 	// フェードしながら描画
-	int alpha = static_cast<int>(255 * ((float)m_fadeGraphTitleTime / 120));
+	int alpha = static_cast<int>(kFadeMax * ((float)m_fadeGraphTitleTime / kFadeTime));
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
 	// 画像の描画
 	DrawGraph(graphPos.x, graphPos.y, graphHandle, true);
@@ -247,6 +266,11 @@ void SceneBase::DrawFadeGraphTitleLogo(int graphHandle, Vec2 graphPos)
 void SceneBase::FadeGraphTitleLogoReset()
 {
 	m_fadeGraphTitleTime = 0;
+}
+
+void SceneBase::FadeGraphTitleLogoDraw()
+{
+	m_fadeGraphTitleTime = kFadeTime;
 }
 
 

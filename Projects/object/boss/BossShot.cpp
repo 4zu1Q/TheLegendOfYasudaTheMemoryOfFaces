@@ -31,7 +31,7 @@ namespace
 	constexpr VECTOR kUpPos = { 0.0f,18.0f,0.0f };
 
 	/*ボスのアニメーションの種類*/
-	const char* const kAnimBossInfoFilename = "Data/Master/AnimBossShotMaster.csv";
+	const char* const kAnimBossInfoFilename = "Data/Csv/AnimBossShot.csv";
 
 	const char* const kAnimIdle = "Idle";
 	const char* const kAnimWalk = "Walk";
@@ -310,6 +310,11 @@ void BossShot::Draw()
 	DrawSphere3D(m_attackPos, m_normalAttackRadius, 16, 0xff00ff, 0xffffff, false);
 	DrawSphere3D(m_attackPos, m_weaponAttackRadius, 16, 0xff00ff, 0xffffff, false);
 	DrawSphere3D(m_shockAttackPos, m_shockRadius, 16, 0xff00ff, 0xffffff, false);
+
+	if (m_isHit)
+	{
+		DrawSphere3D(m_hitPos, m_hitRadius, 16, 0xff00ff, 0xffffff, false);
+	}
 
 	if (m_isAttack)
 	{

@@ -30,7 +30,7 @@ namespace
 	constexpr VECTOR kUpPos = { 0.0f,18.0f,0.0f };
 
 	/*ボスのアニメーションの種類*/
-	const char* const kAnimSpeedInfoFilename = "Data/Master/AnimBossSpeedMaster.csv";
+	const char* const kAnimSpeedInfoFilename = "Data/Csv/AnimBossSpeed.csv";
 
 	const char* const kAnimIdle = "Idle";
 	const char* const kAnimDash = "Dash";
@@ -202,8 +202,6 @@ void BossSpeed::Update(std::shared_ptr<MyLib::Physics> physics, Player& player, 
 	m_playerKind = player.GetFaceKind();
 	m_isPlayerFace = player.GetIsFaceUse();
 
-
-
 	if (m_isHit)
 	{
 		m_damageFrame++;
@@ -237,14 +235,8 @@ void BossSpeed::Update(std::shared_ptr<MyLib::Physics> physics, Player& player, 
 		OnDead();
 	}
 
-	//auto pos = m_rigidbody.GetPos();
-
 	//モデルのポジションを合わせるよう
-	//VECTOR modelPos = VGet(pos.x, pos.y, pos.z);
-
 	m_posUp = VGet(m_pos.x, m_pos.y + kUpPos.y, m_pos.z);
-
-	//DrawSphere3D(m_pos, 32, 16, 0xffffff, 0xffffff, false);
 
 	//モデルに座標をセットする
 	MV1SetPosition(m_modelH, m_pos);
@@ -266,6 +258,11 @@ void BossSpeed::Draw()
 	DrawSphere3D(m_attackPos, m_normalAttackRadius, 16, 0xff00ff, 0xffffff, false);
 	DrawSphere3D(m_attackPos, m_weaponAttackRadius, 16, 0xff00ff, 0xffffff, false);
 	DrawSphere3D(m_shockAttackPos, m_shockRadius, 16, 0xff00ff, 0xffffff, false);
+
+	if (m_isHit)
+	{
+		DrawSphere3D(m_hitPos, m_hitRadius, 16, 0xff00ff, 0xffffff, false);
+	}
 
 	if (m_isAttack)
 	{
@@ -332,8 +329,6 @@ void BossSpeed::IdleUpdate()
 
 	m_rigidbody.SetVelocity(VGet(0, 0, 0));
 	m_actionTime++;
-
-	//auto pos = m_rigidbody.GetPos();
 
 	//プレイヤーへの向きを取得
 	m_direction = VSub(m_playerPos, m_pos);

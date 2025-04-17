@@ -19,16 +19,19 @@ private:
 
 	int m_stamina;
 
+	//プレイヤーのステータス
 	float m_playerHp;
 	float m_playerMp;
 	float m_playerStamina;
 
+	//画像ハンドルこれで全ての画像をロードする
 	std::vector<int> m_handles;
 
-	//スタミナゲージハンドル
-	//std::array<int, 3> m_staminaGaugeHandle{};
-
+	//スタミナを使い切った場合
 	bool m_isPlayerStamina;
+
+	//カーソルアニメーション
+	float m_selectAnimation;
 
 	double m_percent;
 	double m_percentGreenGauge;

@@ -2,6 +2,9 @@
 
 #include "object/player/Player.h"
 
+#include "util/SaveDataManager.h"
+#include "util/Game.h"
+
 namespace
 {
 
@@ -14,29 +17,40 @@ namespace
 	constexpr float kAddPosY = 8.0f;
 
 	//モデルのスケール値
-	constexpr VECTOR kModelScale = { 0.2f , 0.2f , 0.2f };
+	constexpr VECTOR kModelScale = { 0.5f , 0.5f , 0.5f };
 
 	//ポジション
-	constexpr VECTOR kTombPowerPos = { -460.0f , 38.0f , 264.0f };
-	constexpr VECTOR kTombSpeedPos = { 327.0f , 138.0f , 602.0f };
-	constexpr VECTOR kTombShotPos = { 285.0f , 130.0f , -400.0f };
-	constexpr VECTOR kTombRastPos = { -145.0f , 435.0f , -335.0f };
+	constexpr VECTOR kTombPowerPos = { -172.0f , -37.0f , 625.0f };
+	constexpr VECTOR kTombSpeedPos = { 987.0f , -37.0f , 610.0f };
+	constexpr VECTOR kTombShotPos = { 413.0f , -37.0f , -366.0f };
+	constexpr VECTOR kTombRastPos = { 406.0f , 4.0f , 258.0f };
 	//トライアングルのポジション
 	constexpr VECTOR kTrianglePowerPos = { 0.0f , 38.0f , 50.0f };
 	constexpr VECTOR kTriangleSpeedPos = { 0.0f , 38.0f , 50.0f };
 	constexpr VECTOR kTriangleShotPos = { 0.0f , 38.0f , 50.0f };
 	constexpr VECTOR kTriangleRastPos = { 0.0f , 38.0f , 50.0f };
 
-	constexpr float kSinSpeed = 0.01f;
-	constexpr float kHeightSize = 0.05f;
+	//墓のメッセージポジション
+	constexpr VECTOR kMessagePowerPos = { 0.0f , 0.0f , 0.0f };
+	constexpr VECTOR kMessageSpeedPos = { 0.0f , 0.0f , 0.0f };
+	constexpr VECTOR kMessageShotPos = { 0.0f , 0.0f , 0.0f };
+	constexpr VECTOR kMessageRastPos = { 0.0f , 0.0f , 0.0f };
+
+
+	constexpr float kSinSpeed = 0.05f;
+	constexpr float kHeightSize = 0.2f;
+
+	constexpr int kRadiusTombSize = 24;
+	constexpr int kRadiusRastSize = 48;
+
 
 	//回転速度
 	constexpr float kRotSpeed = 0.05f;
 }
 
 Tomb::Tomb() :
-	m_radiusB(12),
-	m_radiusRB(24),
+	m_radiusB(kRadiusTombSize),
+	m_radiusRB(kRadiusRastSize),
 	m_posPower(kTombPowerPos),
 	m_posSpeed(kTombSpeedPos),
 	m_posShot(kTombShotPos),
@@ -51,6 +65,8 @@ Tomb::Tomb() :
 	m_modelTrianglePowerH = MV1LoadModel(kTrianglePowerModelFileName);
 	m_modelTriangleSpeedH = MV1LoadModel(kTriangleSpeedModelFileName);
 	m_modelTriangleShotH = MV1LoadModel(kTriangleShotModelFileName);
+
+
 }
 
 Tomb::~Tomb()
@@ -58,8 +74,14 @@ Tomb::~Tomb()
 	Finalize();
 }
 
-void Tomb::Initialize()
+void Tomb::Initialize(VECTOR powerPos, VECTOR speedPos, VECTOR shotPos)
 {
+
+	//モデルの移動
+	m_posPowerTriangle = powerPos;
+	m_posSpeedTriangle = speedPos;
+	m_posShotTriangle = shotPos;
+
 	MV1SetScale(m_modelTrianglePowerH, kModelScale);
 	MV1SetScale(m_modelTriangleSpeedH, kModelScale);
 	MV1SetScale(m_modelTriangleShotH, kModelScale);
@@ -80,14 +102,8 @@ void Tomb::Finalize()
 	m_modelTriangleShotH = -1;
 }
 
-void Tomb::Update(VECTOR powerPos, VECTOR speedPos, VECTOR shotPos)
+void Tomb::Update()
 {
-	//モデルの回転
-	//モデルの移動
-	m_posPowerTriangle = powerPos;
-	m_posSpeedTriangle = speedPos;
-	m_posShotTriangle = shotPos;
-
 	m_angle += kRotSpeed;
 
 	//1回転したら値をリセット
@@ -122,10 +138,6 @@ void Tomb::Draw()
 	DrawSphere3D(m_posRast, m_radiusRB, 32, 0xffffff, 0xff0000, false);
 #endif
 
-	//DrawFormatString(0, 48, 0xff0fff, "PowerPos:%f,%f,%f", m_posPower.x, m_posPower.y, m_posPower.z);
-	//DrawFormatString(0, 64, 0xff0fff, "SpeedPos:%f,%f,%f", m_posSpeed.x, m_posSpeed.y, m_posSpeed.z);
-	//DrawFormatString(0, 80, 0xff0fff, "ShotPos:%f,%f,%f", m_posShot.x, m_posShot.y, m_posShot.z);
-	//DrawFormatString(0, 96, 0xff0fff, "RastPos:%f,%f,%f", m_posRast.x, m_posRast.y, m_posRast.z);
 }
 
 void Tomb::DrawTriangle(Game::e_BossKind bossKind)
@@ -143,6 +155,25 @@ void Tomb::DrawTriangle(Game::e_BossKind bossKind)
 		MV1DrawModel(m_modelTriangleShotH);
 	}
 	
+}
+
+void Tomb::DrawTriangleSelect()
+{
+	if (SaveDataManager::GetInstance().IsRelease(Game::e_PlayerKind::kPowerPlayer))
+	{
+		MV1DrawModel(m_modelTrianglePowerH);
+	}
+
+	if (SaveDataManager::GetInstance().IsRelease(Game::e_PlayerKind::kSpeedPlayer))
+	{
+		MV1DrawModel(m_modelTriangleSpeedH);
+	}
+
+	if (SaveDataManager::GetInstance().IsRelease(Game::e_PlayerKind::kShotPlayer))
+	{
+		MV1DrawModel(m_modelTriangleShotH);
+	}
+
 }
 
 bool Tomb::Hit(std::shared_ptr<Player> pPlayer, VECTOR pos)

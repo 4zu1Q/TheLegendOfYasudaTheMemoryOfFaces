@@ -66,6 +66,14 @@ namespace Game
 		kBossShot,		//玉の攻撃
 	};
 
+	//敵の攻撃種類
+	enum class e_EnemyAttackKind
+	{
+		kEnemyAttackNone,
+		kEnemyAttack,			//手の攻撃
+		kEnemyJumpAttack,		//衝撃波の攻撃
+	};
+
 	//プレイヤーの攻撃種類
 	enum class e_PlayerAttackKind
 	{
@@ -80,11 +88,13 @@ namespace Game
 	enum class e_StageKind
 	{
 		kTitle,
+		kTutorial,
 		kSelect,
 		kGamePlay,
 		kStageNum		//ステージの種類の総数
 	};
 
+	//演出用のプレイヤーの位置
 	enum class e_PlayerProduction
 	{
 		kTitle,
@@ -97,25 +107,34 @@ namespace Game
 	{
 		kPlayer,			// プレイヤー
 		kCamera,			// カメラ
-		kSword,				// 剣(プレイヤー用)
-		kAxe,				// 斧(プレイヤー用)
-		kDagger,			// 双剣(プレイヤー用)
-		kWand,				// 杖(プレイヤー用)
-		kLongSword,			// 長剣(プレイヤー用)
-		kPlayerShot,		// 弾(プレイヤー用) //　できればやりたい
 		
 		kItemHp,			// アイテム(体力回復用)
 		kItemMp,			// アイテム(魔力回復用)
 		kItemWarp,			// アイテム(ゲームセレクトへワープするアイテム)
 		
+		kEnemy,				// 敵
 		kBoss,				// ボス
 		kBossAttack1,		// 攻撃1(ボス用)
 		kBossAttack2,		// 攻撃2(ボス用)
 		kBossAttack3,		// 攻撃3(ボス用)
 		kBossShot,			// 弾(ボス用) //できればやりたい…
-		kGround,		// 足場の地面
+		kGround,			// 足場の地面
 		kWall,
+	};
 
+	//チュートリアル進行用のenum
+	enum class e_TutorialProgress
+	{
+		kNone,
+		kOne,		//仮
+		kTwo,		//仮
+		kThree,		//仮
+		kFour,		//仮
+		kFive,		//仮
+		kSix,		//仮
+		kSeven,		//仮
+		kEight,		//仮
+		kNine,		//仮
 	};
 
 }

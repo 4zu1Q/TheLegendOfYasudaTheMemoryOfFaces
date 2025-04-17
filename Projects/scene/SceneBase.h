@@ -108,20 +108,30 @@ protected:
 	/// </summary>
 	void FadeGraphSelectReset();
 
-
+	/// <summary>
+	/// 画像のフェードアップデート処理
+	/// </summary>
 	void UpdateFadeGraphTitleLogo();
 
+	/// <summary>
+	/// 画像のフェード描画処理
+	/// </summary>
+	/// <param name="graphHandle"></param>
+	/// <param name="graphPos"></param>
 	void DrawFadeGraphTitleLogo(int graphHandle, Vec2 graphPos);
 
+	//フェードリセット
 	void FadeGraphTitleLogoReset();
 
+	//画像を即描画させる
+	void FadeGraphTitleLogoDraw();
 
 
 protected:
 
 	SceneManager& m_pManager;	//シーン管理クラスの参照
-	bool m_isToNextScene;
-	bool m_isFadeColor;		
+	bool m_isToNextScene;		//次のシーンに行く場合のフラグ
+	bool m_isFadeColor;			//フェードカラーの場合
 
 private:
 

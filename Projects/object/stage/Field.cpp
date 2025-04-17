@@ -4,24 +4,24 @@
 namespace 
 {
 
-	const char* const kFieldModelFilename = "Data/Model/Stage/Field12.mv1";
-	const char* const kTestModelFilename = "Data/Model/Weapon/Boss_Shield.mv1";
-
 	const char* const kShadowFileName[static_cast<int>(Game::e_StageKind::kStageNum)] =
 	{
 		"Data/Model/Stage/TitleStage.mv1",
-		"Data/Model/Stage/SelectStage.mv1",
+		"Data/Model/Stage/TutorialStage1.mv1",
+		"Data/Model/Stage/SelectStage2.mv1",
 		"Data/Model/Stage/BattleStage.mv1",
 	};
 
 	//ステージのスケール値
 	constexpr VECTOR kTitleModelScale = { 0.2f , 0.2f , 0.2f };
+	constexpr VECTOR kTutorialModelScale = { 0.5f , 0.5f , 0.5f };
 	constexpr VECTOR kSelectModelScale = { 1.0f , 1.0f , 1.0f };
 	constexpr VECTOR kGamePlayModelScale = { 0.4f , 0.4f , 0.4f };
 
 	//ステージの座標
 	constexpr VECTOR kTitleModelPosition = { 0, 60, 0 };
-	constexpr VECTOR kSelectModelPosition = { 70.0f, -1600.0f, 1200.0f };
+	constexpr VECTOR kTutorialModelPosition = { 400.0f, -400.0f, -200.0f };
+	constexpr VECTOR kSelectModelPosition = { 70.0f, -1700.0f, 1200.0f };
 	constexpr VECTOR kGamePlayModelPosition = { 0.0f, 150.0f, 0.0f };
 }
 
@@ -34,6 +34,10 @@ Field::Field(Game::e_StageKind stageKind):
 	if (stageKind == Game::e_StageKind::kTitle)
 	{
 		MV1SetScale(m_modelH, kTitleModelScale);
+	}
+	else if (stageKind == Game::e_StageKind::kTutorial)
+	{
+		MV1SetScale(m_modelH, kTutorialModelScale);
 	}
 	else if (stageKind == Game::e_StageKind::kSelect)
 	{
@@ -48,6 +52,10 @@ Field::Field(Game::e_StageKind stageKind):
 	{
 		m_pos = kTitleModelPosition;
 		MV1SetRotationXYZ(m_modelH, VGet(0, 14.1, 0));
+	}
+	else if (stageKind == Game::e_StageKind::kTutorial)
+	{
+		m_pos = kTutorialModelPosition;
 	}
 	else if (stageKind == Game::e_StageKind::kSelect)
 	{

@@ -10,14 +10,11 @@ class PlayerWeapon;
 class Collidable;
 class AnimController;
 
-class WeaponBase;
-
-
-
 class Player : public CharaBase
 {
 
 public:
+
 	//ボタンの種類
 	enum class e_ButtonKind : int
 	{
@@ -26,7 +23,6 @@ public:
 		kBbutton,	//Bボタン
 		kXbutton,	//Xボタン
 		kYbutton,	//Yボタン
-
 	};
 
 	//後ろのボタンの種類
@@ -53,36 +49,30 @@ public:
 
 	void HitUpdate(VECTOR hitPos,VECTOR attackPos, VECTOR weaponPos, VECTOR shockPos,float hitRadius ,float attackRadius, float weaponRadius, float shockRadius, bool isBossAttack);
 
-	// 衝突したとき
-	//virtual void OnCollide(const Collidable& colider);
-
 	//プレイヤーのモデルハンドルを取得
 	const int& GetModelHandle() const { return m_modelH; }
 	void SetModelHandle(const int modelH) { m_modelH = modelH; }
 
 	//プレイヤー下の座標を取得
 	const VECTOR& GetPos() const;
-	void SetPosDown(const VECTOR pos);
 
 	//プレイヤー上の座標を取得
 	const VECTOR& GetPosUp() const { return m_posUp; }
-	void SetPosUp(const VECTOR pos) { m_posUp = pos; }
 
 	//プレイヤーの攻撃座標を取得
 	const VECTOR& GetAttackXPos() const { return m_attackXPos; }
-
 	const VECTOR& GetAttackYPos() const { return m_attackYPos; }
-
 	const VECTOR& GetShockPos() const { return m_attackYPos; }
 
+	//プレイヤーの攻撃半径を取得
 	const float& GetAttackXRadius() const { return m_attackXRadius; }
-
 	const float& GetAttackYRadius() const { return m_attackYRadius; }
-
 	const float& GetShockRadius() const { return m_attackShockRadius; }
 
+	//攻撃をしたかどうかを取得
 	const bool& GetIsAttack() const { return m_isAttack; }
 
+	//プレイヤーがどの攻撃をしたかを取得
 	const Game::e_PlayerAttackKind& GetAttackKind() const { return m_attackKind; }
 
 	/* ステータスの取得 */
@@ -106,7 +96,6 @@ public:
 
 	//ジャンプフラグを取得
 	const bool& GetIsJump() const { return m_pColliderData->IsGround(); }
-	//void SetIsJump(const bool isJump) { m_isJump = isJump; }
 
 	//ボタンを押しているかどうかのフラグを取得
 	const bool& GetIsButtonPush() const { return m_isButtonPush; }
@@ -120,19 +109,37 @@ public:
 
 	//半径の取得
 	const float& GetRadius() const;
-
 	const float& GetAngle() const { return m_angle; }
-
-	/*プレイヤーがボスを倒したかどうかのフラグを取得する関数*/
-	//これ多分必要ない可能性
-	//void ShadowRender(int stageH);
 
 
 private:
 
+	//プレイヤーの攻撃更新処理
+	void CollisionPosUpdate();
+	//ダメージ更新処理
+	void DamageUpdate();
+	//プレイヤーのステータス更新処理
+	void StatusUpdate();
+
+	//プレイヤーの回転処理
+	void PlayerSetPosAndRotation(VECTOR pos, float angle);
+	//プレイヤーの移動
+	void Move();
+	//ボスの攻撃の当たり判定
 	void Hit();
 
-	void OnCollide(const Collidable& colider);
+	// プレイヤーが顔を使用時の関数
+	void FaceSelect();
+	//プレイヤーがアイテムを使うときの関数
+	void FaceUse();
+
+	//武器を描画するだけの関数
+	void WeaponDraw(PlayerWeapon& weapon);
+	//プレイヤーの種類で描画を変える関数
+	void PlayerDraw();
+
+	//攻撃半径と攻撃の距離をセットする関数
+	void SetAttackCollision(float attackXRadius, float attackYRadius, float attackShockRadius, float attackXMoveScale, float attackYMoveScale);
 
 	//攻撃判定
 	bool IsAttackHit(VECTOR attackPos, float radius);
@@ -184,172 +191,128 @@ private:
 	void OnFaceChange();
 	void OnFaceUse();
 
-	void OnTalk();
-
-	//武器を描画するだけの関数
-	void WeaponDraw(PlayerWeapon& weapon);
-	//プレイヤーの種類で描画を変える関数
-	void PlayerDraw();
-
-	void PlayerSetPosAndRotation(VECTOR pos, float angle);
-
-	/// <summary>
-	/// プレイヤーが顔を使用時の関数
-	/// </summary>
-	void FaceSelect();
-
-	void FaceUse();
-
-	//タイプによってアニメーションを分ける関数
-	void AnimChange(const char* normal, const char* power, const char* speed, const char* shot);
+	/* On関数に入る時にセットする関数 */
+	void SetOnReset();	//状態遷移した時に値をリセットさせる関数
+	void SetOnDamage();	//ダメージを受けた時のセット関数
+	void SetOnJump();		//ジャンプをした時のセット関数
 
 private:
-
-	//スマートポインタ
-	std::shared_ptr<WeaponBase> m_pWeaponBase;
-	std::shared_ptr<AnimController> m_pAnim;
-
-
-	//プレイヤーの顔の種類
-	Game::e_PlayerKind m_playerKind;
-	e_ButtonKind m_buttonKind;
 
 	//メンバ関数ポインタ
 	using UpdateFunc_t = void(Player::*)(/*引数書く*/);
 	UpdateFunc_t m_updateFunc;
 
-	//各種類のキャラクターのモデルハンドル
+	//スマートポインタ
+	std::shared_ptr<AnimController> m_pAnim;
+
+
+	/* プレイヤーの情報 */
+
+	//モデルハンドル
 	int m_modelPowerH;
 	int m_modelSpeedH;
 	int m_modelShotH;
 	int m_modelRassH;
+	int m_shadowH;
 
-	//
+	//ステータス
 	float m_hp;
 	float m_mp;
 	float m_stamina;
 
-	bool m_isUseMp;
-	bool m_isMp;
-	bool m_isStamina;
+	bool m_isUseMp;	 //一回だけ使うため
+	bool m_isMp;	 //MPを使い切ったかどうか
+	bool m_isStamina;//スタミナを使い切ったかどうか
+	bool m_isDash;	 //ダッシュしているかどうか
+	bool m_isLockOn; //ロックオンしてるかどうか
+	bool m_isGameOver;	//ゲームオーバー画面に遷移するためのフラグ
 
-	int m_shadowH;
-	int m_weaponH;
-	
 	//ジャンプ量を見る
 	float m_jumpPower;
 	int m_jumpCount;
 
-	int m_frame;
-
 	//プレイヤの座標
-	//	VECTOR m_posDown;
 	VECTOR m_posUp;
 	VECTOR m_pos;
 	VECTOR m_hitPos;
-	VECTOR m_bossPos;
+	
+	VECTOR m_move;
+	float m_angle;		//回転
 
+	int m_moveCount;	//動いたときの音を出すカウント
+	int m_damageFrame;	//無敵時間の時の点滅時間
+
+	int m_deadTime;
+	bool m_isDead;		//死んだかどうかを判定
+
+	//攻撃座標
 	VECTOR m_attackXPos;
 	VECTOR m_attackYPos;
-	VECTOR m_attackDir;
-	VECTOR m_attackMove;
+	VECTOR m_attackDir;		//攻撃の向き
+	VECTOR m_attackMove;	//プレイヤーから攻撃座標の距離
 
-	VECTOR m_cameraToPlayerVec;
-	VECTOR m_bossToPlayerVec;
+	bool m_isHitDamage;	//ボスの攻撃に当たったかどうか
+	bool m_isAttack;	//攻撃したかどうか
+	int m_attackFrame;	//攻撃のフレーム
 
-	VECTOR m_cameraDirection;
-
-	VECTOR m_avoid;
-	VECTOR m_move;
-
-	//ボスの攻撃座標
-
-	VECTOR m_bossHitPos;
-	VECTOR m_bossAttackPos;
-	VECTOR m_bossWeaponPos;
-	VECTOR m_bossShockPos;
-
-	float m_bossHitRadius;
-	float m_bossAttackRadius;
-	float m_bossWeaponRadius;
-	float m_bossShockRadius;
-
-	bool m_isBossAttack;
-
-	MATRIX m_playerRotMtx;
-
-	float m_rate;
-	float m_len;
-
-	//回転
-	float m_angle;
-	float m_radius;
-
-	//カメラの回転情報
-	float m_cameraAngle;
-
-	//死んだかどうかを判定
-	bool m_isDead;
-
-	//動けるか動けないかのフラグ
-	bool m_isMove;
-
-	//アナログスティック用の変数
-	int m_analogX;
-	int m_analogZ;
+	int m_chargeTime;	//強攻撃のチャージ時間
 
 	//続けて攻撃するかどうか
 	int m_multiAttack;
 	bool m_isNextAttackFlag;
 
-	bool m_isAttack;
-	bool m_isShock;
-	bool m_isHit;
-	bool m_isAttackY;	//特殊攻撃を使ったどうか
-	int m_shockFrame;
-
-	//強攻撃のチャージ時間
-	int m_chargeTime;
-	int m_deadTime;
-
-	//ジャンプ力
-	//float m_jumpPower;
-
-	float m_speed;
-
-	//顔を装着しているかしていないかの変数
-	//ボタンを押しているかどうか
-	bool m_isFaceUse;
-	bool m_isButtonPush;
-
-	//ロックオンしてるかどうか
-	bool m_isLockOn;
-
-	//ゲームオーバー画面に遷移するためのフラグ
-	bool m_isGameOver;
-
 	//攻撃の種類
 	Game::e_PlayerAttackKind m_attackKind;
-	Game::e_BossAttackKind m_bossAttackKind;
 
-	//動いたときの音を出すやつ
-	int m_moveCount;
+	//半径
+	float m_radius;
+	float m_hitRadius;			//プレイヤーが敵の攻撃にヒットする当たり判定の半径
+	float m_attackXRadius;		//プレイヤーの通常攻撃半径
+	float m_attackYRadius;		//プレイヤーの特殊攻撃半径
+	float m_attackShockRadius;	//プレイヤーの衝撃攻撃半径
+	
+	//プレイヤーの顔の種類
+	Game::e_PlayerKind m_playerKind;
+	bool m_isFaceUse;		//仮面を使っているかどうか
 
-	//無敵時間の時の点滅時間
-	int m_damageFrame;
+	//押しているボタンの種類
+	e_ButtonKind m_buttonKind;
+	bool m_isButtonPush;	//ボタンを押しているかどうか
 
-	//プレイヤーが敵の攻撃にヒットする当たり判定の半径
-	float m_hitRadius;
-	//プレイヤーの通常攻撃半径
-	float m_attackXRadius;
-	//プレイヤーの特殊攻撃半径
-	float m_attackYRadius;
-	//プレイヤーの衝撃攻撃半径
-	float m_attackShockRadius;
+	/* ボスの情報 */
 
-	int m_attackFrame;
+	VECTOR m_bossPos;
+	VECTOR m_bossToPlayerVec; //ボスからプレイヤー
 
-	//RTのインプット
+	//ボスの攻撃座標
+	VECTOR m_bossHitPos;
+	VECTOR m_bossAttackPos;
+	VECTOR m_bossWeaponPos;
+	VECTOR m_bossShockPos;
+
+	//ボスの円の半径を代入するための変数
+	float m_bossHitRadius;
+	float m_bossAttackRadius;
+	float m_bossWeaponRadius;
+	float m_bossShockRadius;
+
+	bool m_isBossAttack;	//ボスがアタックしたかどうか
+
+	Game::e_BossAttackKind m_bossAttackKind;	//ボスの攻撃種類
+
+	/* カメラの情報 */
+
+	VECTOR m_cameraDirection;
+	//カメラの回転情報
+	float m_cameraAngle;
+
+	/* Pad情報 */
+
+	//アナログスティック用の変数
+	int m_analogX;
+	int m_analogZ;
+
+	//RT用のインプット
 	DINPUT_JOYSTATE m_input;
 
 };
