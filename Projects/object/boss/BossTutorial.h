@@ -9,6 +9,7 @@ class Player;
 
 class BossTutorial : public BossBase
 {
+public:
 	BossTutorial();
 	virtual ~BossTutorial();
 
@@ -25,7 +26,8 @@ class BossTutorial : public BossBase
 
 	const VECTOR& GetPosUp() const;
 
-	//const float& GetHp() const { return m_hp; }
+	const bool& GetIsBattle() const { return m_isBattle; }
+
 
 private:
 
@@ -78,6 +80,8 @@ private:
 	//次の行動に移るための変数
 	int m_actionTime;
 	int m_actionKind;
+
+	bool m_isBattle;
 
 	//攻撃判定の半径
 	float m_attackRadius;

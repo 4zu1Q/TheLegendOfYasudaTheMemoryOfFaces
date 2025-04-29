@@ -7,7 +7,7 @@ namespace
 	const char* const kShadowFileName[static_cast<int>(Game::e_StageKind::kStageNum)] =
 	{
 		"Data/Model/Stage/TitleStage.mv1",
-		"Data/Model/Stage/TutorialStage1.mv1",
+		"Data/Model/Stage/TutorialStage3.mv1",
 		"Data/Model/Stage/SelectStage2.mv1",
 		"Data/Model/Stage/BattleStage.mv1",
 	};
@@ -20,7 +20,7 @@ namespace
 
 	//ステージの座標
 	constexpr VECTOR kTitleModelPosition = { 0, 60, 0 };
-	constexpr VECTOR kTutorialModelPosition = { 400.0f, -400.0f, -200.0f };
+	constexpr VECTOR kTutorialModelPosition = { 400.0f, 100.0f, -200.0f };
 	constexpr VECTOR kSelectModelPosition = { 70.0f, -1700.0f, 1200.0f };
 	constexpr VECTOR kGamePlayModelPosition = { 0.0f, 150.0f, 0.0f };
 }

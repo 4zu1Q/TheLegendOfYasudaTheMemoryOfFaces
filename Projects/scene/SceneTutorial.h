@@ -9,12 +9,14 @@
 
 class Player;
 class PlayerWeapon;
-class EnemyNormal;
-//class BossTutorial;
+//class EnemyNormal;
+//class EnemySpecial;
+class BossTutorial;
 class Camera;
 class FaceUi;
 class FaceFrameUi;
 class ButtonUi;
+class HpBar;
 class PlayerBarUi;
 class SkyDome;
 class Field;
@@ -43,14 +45,16 @@ private:
 	std::shared_ptr<Player> m_pPlayer;
 	std::shared_ptr<PlayerWeapon> m_pPlayerWeapon;
 	std::shared_ptr<Camera> m_pCamera;
-	std::shared_ptr<EnemyNormal> m_pEnemyNormal;
+	//std::shared_ptr<EnemyNormal> m_pEnemyNormal;
+	//std::shared_ptr<EnemySpecial> m_pEnemySpecial;
 
-	//std::shared_ptr<BossTutorial> m_pBossTutorial;
+	std::shared_ptr<BossTutorial> m_pBossTutorial;
 
 	std::shared_ptr<PlayerBarUi> m_pPlayerBarUi;
 	std::shared_ptr<FaceUi> m_pFaceUi;
 	std::shared_ptr<FaceFrameUi> m_pFaceFrameUi;
 	std::shared_ptr<ButtonUi> m_pButtonUi;
+	std::shared_ptr<HpBar> m_pHpBarUi;
 
 	std::shared_ptr<Field> m_pField;
 	std::shared_ptr<SkyDome> m_pSkyDome;
@@ -67,13 +71,15 @@ private:
 	int m_fontH;	//フォントハンドル
 	int m_shadowMap;	//シャドウマップハンドル
 
+	int m_tutorialFrame;
+
 	int m_effectFrame;	//エフェクトのフレーム
 
 	//ステージ移動する当たり判定フラグ
 	bool m_isSelectStage;
 
 	//
-
+	bool m_isCameraLockOn;	//ボスをロックオンしていいかどうか
 
 };
 

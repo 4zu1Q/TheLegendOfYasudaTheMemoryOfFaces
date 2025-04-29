@@ -17,6 +17,7 @@
 #include "scene/SceneGamePlay.h"
 #include "scene/SceneOption.h"
 #include "scene/SceneDebug.h"
+#include "scene/SceneTutorial.h"
 
 #include "util/SoundManager.h"
 #include "util/SaveDataManager.h"
@@ -318,8 +319,10 @@ void SceneTitle::Update()
 			if (m_sceneTrans == e_SceneTrans::kNewGame)
 			{
 				SoundManager::GetInstance().StopBgm("titleBgm");
-				m_pManager.ChangeScene(std::make_shared<SceneSelect>(m_pManager, Game::e_StageKind::kSelect,kPlayerPos));
+				//m_pManager.ChangeScene(std::make_shared<SceneSelect>(m_pManager, Game::e_StageKind::kSelect,kPlayerPos));
 				//m_pManager.ChangeScene(std::make_shared<SceneStory>(m_pManager));
+				m_pManager.ChangeScene(std::make_shared<SceneTutorial>(m_pManager, Game::e_StageKind::kTutorial));
+
 				return;
 			}
 

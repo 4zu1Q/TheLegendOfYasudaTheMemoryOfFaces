@@ -21,11 +21,6 @@ Collidable::Collidable(e_Priority priority, Game::e_GameObjectTag tag, ColliderD
 /// </summary>
 Collidable::~Collidable()
 {
-	//if (m_colliderData != nullptr)
-	//{
-	//	delete m_colliderData;
-	//	m_colliderData = nullptr;
-	//}
 }
 
 /// <summary>
@@ -125,31 +120,8 @@ std::shared_ptr<ColliderData> Collidable::CreateColliderData(ColliderData::e_Kin
 		assert(0 && "colliderData作成に失敗。");
 	}
 
+	//当たり判定を追加する
+	//m_pColliderData.emplace_back(create);
+
 	return create;
-
-
-	////変更前
-
-	//if (m_colliderData != nullptr)
-	//{
-	//	assert(0 && "colliderDataは既に作られています。");
-	//	return m_colliderData;
-	//}
-
-	//switch (kind)
-	//{
-	//case ColliderData::e_Kind::kSphere:
-	//	m_colliderData = new ColliderDataSphere(isTrigger);
-	//	break;
-	//case ColliderData::e_Kind::kCapsule:
-	//	m_colliderData = new ColliderDataCapsule(isTrigger);
-	//	break;
-	//case ColliderData::e_Kind::kLine:
-	//	m_colliderData = new ColliderDataLine(isTrigger);
-	//	break;
-	//default:
-	//	assert(0 && "colliderData作成に失敗。");
-	//	break;
-	//}
-	//return m_colliderData;
 }

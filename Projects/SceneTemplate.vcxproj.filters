@@ -273,6 +273,12 @@
     <ClCompile Include="object\enemy\EnemyNormal.cpp">
       <Filter>ソース ファイル\object\enemy</Filter>
     </ClCompile>
+    <ClCompile Include="object\enemy\EnemySpecial.cpp">
+      <Filter>ソース ファイル\object\enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="object\Attack.cpp">
+      <Filter>ソース ファイル\object</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="scene\SceneBase.h">
@@ -478,6 +484,12 @@
     </ClInclude>
     <ClInclude Include="object\enemy\EnemyNormal.h">
       <Filter>ヘッダー ファイル\object\enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="object\enemy\EnemySpecial.h">
+      <Filter>ヘッダー ファイル\object\enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="object\Attack.h">
+      <Filter>ヘッダー ファイル\object</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

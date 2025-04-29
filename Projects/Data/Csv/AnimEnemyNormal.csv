@@ -1,5 +1,5 @@
 ID,名前,スピード
-Idle,Idle,0.5
+Idle,Idle_Combat,0.5
 Walk,Walking_D_Skeletons,0.8
 Dash,Running_C,0.8
 Attack,1H_Melee_Attack_Stab,0.5

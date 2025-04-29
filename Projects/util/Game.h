@@ -49,6 +49,7 @@ namespace Game
 	//ボスの種類
 	enum class e_BossKind
 	{
+		kTutorial,		//チュートリアル
 		kPower,		//パワー
 		kSpeed,		//スピード
 		kShot,			//ショット
@@ -63,7 +64,6 @@ namespace Game
 		kBossAttack,	//手の攻撃
 		kBossShock,		//衝撃波の攻撃
 		kBossWeapon,	//武器の攻撃
-		kBossShot,		//玉の攻撃
 	};
 
 	//敵の攻撃種類
@@ -107,6 +107,7 @@ namespace Game
 	{
 		kPlayer,			// プレイヤー
 		kCamera,			// カメラ
+		kAttack,			// 攻撃
 		
 		kItemHp,			// アイテム(体力回復用)
 		kItemMp,			// アイテム(魔力回復用)
@@ -123,18 +124,18 @@ namespace Game
 	};
 
 	//チュートリアル進行用のenum
-	enum class e_TutorialProgress
+	enum e_TutorialProgress
 	{
-		kNone,
-		kOne,		//仮
-		kTwo,		//仮
-		kThree,		//仮
-		kFour,		//仮
-		kFive,		//仮
-		kSix,		//仮
-		kSeven,		//仮
-		kEight,		//仮
-		kNine,		//仮
+		kTutorialStart,			//始まって10秒後
+		kTutorialJump,			//ジャンプ
+		kTutorialJumpClear,		//ジャンプクリア
+		kTutorialDashJump,		//ダッシュジャンプ
+		kTutorialDashJumpClear,	//ダッシュジャンプクリア
+		kTutorialAction,		//一通りのアクション
+		kTutorialActionClear,	//一通りのアクションクリア
+		kTutorialBoss,			//ボス戦
+		kTutorialBossClear,		//ボス戦クリア
+		kTutorialMask,			//マスクを拾ったとき
 	};
 
 }
