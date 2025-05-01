@@ -343,9 +343,7 @@ void SceneSelect::Draw()
 
 	ShadowMap_DrawSetup(m_shadowMap); //シャドウマップ描画開始
 
-	//影を描画するための球体
-	DrawSphere3D(VGet(m_pPlayer->GetPos().x, m_pPlayer->GetPos().y + 5.0f, m_pPlayer->GetPos().z), 3.0f, 128, 0xffffff, 0xffffff, false);
-
+	m_pPlayer->Draw(*m_pPlayerWeapon);
 
 	m_pTomb->DrawTriangleSelect();
 

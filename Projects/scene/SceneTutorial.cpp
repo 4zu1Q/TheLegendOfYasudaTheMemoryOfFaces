@@ -4,6 +4,7 @@
 #include "scene/ScenePause.h"
 #include "scene/SceneOption.h"
 #include "scene/SceneSelect.h"
+#include "scene/SceneGameOver.h"
 #include "scene/SceneWords.h"
 #include "scene/SceneDebug.h"
 #include "scene/SceneTutorial.h"
@@ -46,6 +47,7 @@ namespace
 		kHitH,
 	};
 
+	constexpr int kGameOverTimeMax = 180;
 
 	//フォントのパス
 	const char* kFontPath = "Data/Font/Dela-Gothic-One.ttf";
@@ -118,10 +120,11 @@ SceneTutorial::SceneTutorial(SceneManager& manager, Game::e_StageKind stageKind)
 
 	m_pPhysics = std::make_shared<MyLib::Physics>(stageKind);
 
-	m_isCameraLockOn = true;
+	m_isCameraLockOn = false;
 	m_isToNextScene = false;
 	m_effectFrame = 0;
 	m_tutorialFrame = 0;
+	m_gameOverTime = 0;
 
 	m_pPlayer->Initialize(m_pPhysics, kPlayerPos, *m_pPlayerWeapon, kPlayerAngle);
 	
@@ -203,6 +206,8 @@ void SceneTutorial::Update()
 
 	SoundManager::GetInstance().PlayBgm("selectBgm", true);
 
+	/*　チュートリアル　*/
+
 	//1回だけチュートリアルの説明を入れるためのフラグ
 	if (!m_isTutorial[Game::e_TutorialProgress::kTutorialStart])
 	{
@@ -279,8 +284,6 @@ void SceneTutorial::Update()
 	{
 		if (m_pPlayer->GetPos().z <= kTutorialBossBattlePosZ)
 		{
-
-
 			m_isTutorial[Game::e_TutorialProgress::kTutorialBoss] = true;
 			m_pManager.PushScene(std::make_shared<SceneWords>(m_pManager, Game::e_TutorialProgress::kTutorialBoss));
 		}
@@ -336,13 +339,37 @@ void SceneTutorial::Update()
 		}
 	}
 
+	/*　キャラクターたちのアップデート処理　*/
 
 	if (m_pBossTutorial->GetIsBattle())
 	{
+		if (!m_pBossTutorial->GetIsClear())
+		{
+			m_isCameraLockOn = true;
+		}
+
 		SoundManager::GetInstance().StopBgm("selectBgm");
 		SoundManager::GetInstance().PlayBgm("battleBgm", true);
 	}
 
+	//プレイヤーのゲームオーバーフラグがtrueの場合
+	if (m_pPlayer->GetIsGameOver())
+	{
+		m_isCameraLockOn = false;
+		m_gameOverTime++;
+
+		SoundManager::GetInstance().StopBgm("battleBgm");
+
+		StartFadeOut();
+		m_isToNextScene = true;
+	}
+
+	//ゲームオーバー時間が過ぎたら
+	if (m_gameOverTime > kGameOverTimeMax)
+	{
+		m_pManager.ChangeScene(std::make_shared<SceneGameOver>(m_pManager, e_BossKind::kTutorial));
+		return;
+	}
 
 	m_pPlayer->SetCameraDirection(m_pCamera->GetDirection());
 
@@ -371,7 +398,6 @@ void SceneTutorial::Update()
 		m_pPlayer->GetShockPos(), m_pPlayer->GetAttackXRadius(), m_pPlayer->GetAttackYRadius(),
 		m_pPlayer->GetShockRadius(), m_pPlayer->GetIsAttack());
 
-
 	m_pSkyDome->Update();
 	m_pPhysics->Update();
 
@@ -396,8 +422,11 @@ void SceneTutorial::Update()
 	{
 		if (!IsFadingOut())
 		{
-			m_pManager.ChangeScene(std::make_shared<SceneSelect>(m_pManager, Game::e_StageKind::kSelect, kSelectPlayerPos));
-			return;
+			if (m_pBossTutorial->GetIsClear())
+			{
+				m_pManager.ChangeScene(std::make_shared<SceneSelect>(m_pManager, Game::e_StageKind::kSelect, kSelectPlayerPos));
+				return;
+			}
 		}
 	}
 }
@@ -408,12 +437,11 @@ void SceneTutorial::Draw()
 
 	ShadowMap_DrawSetup(m_shadowMap);	//シャドウマップ描画開始
 
-	//影を描画するための球体
-	DrawSphere3D(VGet(m_pPlayer->GetPos().x, m_pPlayer->GetPos().y + 5.0f, m_pPlayer->GetPos().z), 3.0f, 128, 0xffffff, 0xffffff, false);
-	
+	m_pPlayer->Draw(*m_pPlayerWeapon);
+
 	if (m_pBossTutorial->GetHp() != 0)
 	{
-		DrawSphere3D(VGet(m_pBossTutorial->GetPosDown().x, m_pBossTutorial->GetPosDown().y + 5.0f, m_pBossTutorial->GetPosDown().z), 6.0f, 128, 0xffffff, 0xffffff, false);
+		m_pBossTutorial->Draw();
 	}
 
 	ShadowMap_DrawEnd();	//シャドウマップ描画終了
