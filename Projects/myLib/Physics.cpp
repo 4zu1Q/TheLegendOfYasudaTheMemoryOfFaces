@@ -20,7 +20,7 @@ namespace
 	constexpr int kMaxColHitTryNum = 16;
 
 	//壁押し出し時にスライドさせる距離
-	constexpr float kColHitSlideLength = 0.2f;
+	constexpr float kColHitSlideLength = 1.5f;
 
 	//壁ポリゴンか床ポリゴンかを判断するための変数
 	constexpr float kWallPolyBorder = 0.4f;
@@ -123,41 +123,11 @@ void Physics::Update()
 			float radius = capsuleData->m_radius;
 			VECTOR upPos = capsuleData->m_posUp;
 
-
 			DebugDraw::DrawCapsule(pos, upPos, radius, kBeforeFixInfoColor);
 			DebugDraw::DrawCapsule(nextPos, upPos, radius, kAimInfoColor);
 		}
 
 #endif
-
-		if (kind == ColliderData::e_Kind::kSphere)
-		{
-
-
-		}
-		else if (kind == ColliderData::e_Kind::kCapsule)
-		{
-			///*フィールドとの当たり判定の処理*/
-
-			//// 予定ポジション設定
-			//item->m_rigidbody.SetNextPos(nextPos);
-
-			//auto capsule = std::dynamic_pointer_cast<ColliderDataCapsule>(item->m_pColliderData);
-
-
-			//// プレイヤーの周囲にあるステージポリゴンを取得する
-			//// ( 検出する範囲は移動距離も考慮する )
-			//m_hitDim = MV1CollCheck_Sphere(m_pField->GetModelHandle(), -1, item->m_rigidbody.GetPos(), sphere->m_radius);
-
-			////壁と床の当たり判定を行う
-			//CheckWallAndFloor(item);
-
-			////壁との当たり判定処理
-			//FixPositionWithWall(item);
-
-			////床との当たり判定処理
-			//FixNowPositionWithFloor(item);
-		}
 
 		/*フィールドとの当たり判定の処理*/
 
@@ -174,13 +144,6 @@ void Physics::Update()
 			auto capsule = std::dynamic_pointer_cast<ColliderDataCapsule>(item->m_pColliderData);
 			m_hitDim = MV1CollCheck_Capsule(m_pField->GetModelHandle(), -1, item->m_rigidbody.GetPos(), capsule->m_posUp, capsule->m_radius);
 		}
-
-		//auto sphere = std::dynamic_pointer_cast<ColliderDataCapsule>(item->m_pColliderData);
-
-		// プレイヤーの周囲にあるステージポリゴンを取得する
-		// ( 検出する範囲は移動距離も考慮する )
-		//m_hitDim = MV1CollCheck_Capsule(m_pField->GetModelHandle(), -1, item->m_rigidbody.GetPos(), VAdd(item->m_rigidbody.GetNextPos(), VGet(0.0f, sphere->m_radius, 0.0f)), sphere->m_radius);
-
 
 		//壁と床の当たり判定を行う
 		CheckWallAndFloor(item);
@@ -202,12 +165,6 @@ void Physics::Update()
 	// 位置確定
 	FixPosition();
 
-
-	// 当たり通知
-	for (auto& item : onCollideInfo)
-	{
-		//item.owner_->OnCollide(item.colider_);
-	}
 }
 
 /// <summary>
@@ -299,11 +256,9 @@ std::vector<Physics::OnCollideInfo_> Physics::CheckColide() const
 		// FIXME: 定数化
 		if (checkCount > 1000 && doCheck)
 		{
-
 #if _DEBUG
 			printfDx("当たり判定の繰り返しチェックが規定数を超えた\n");
 #endif
-
 			break;
 		}
 	}
@@ -341,10 +296,6 @@ bool Physics::IsCollide(const Collidable* objA, const Collidable* objB) const
 	{
 		auto atob = VSub(objB->m_rigidbody.GetNextPos(), objA->m_rigidbody.GetNextPos());
 		auto atobLength = VSize(atob);
-
-		//
-
-
 	}
 	//円とカプセル
 	else if (aKind == ColliderData::e_Kind::kCapsule && bKind == ColliderData::e_Kind::kSphere
@@ -353,12 +304,7 @@ bool Physics::IsCollide(const Collidable* objA, const Collidable* objB) const
 	{
 		auto atob = VSub(objB->m_rigidbody.GetNextPos(), objA->m_rigidbody.GetNextPos());
 		auto atobLength = VSize(atob);
-
-		//
-
-
 	}
-
 
 
 	return isHit;
@@ -486,172 +432,6 @@ void MyLib::Physics::PushOutFromCollision(std::shared_ptr<Collidable>& col, cons
 
 void MyLib::Physics::FixPositionWithWall(std::shared_ptr<Collidable>& col)
 {
-
-	//auto sphere = std::dynamic_pointer_cast<ColliderDataSphere>(col->m_pColliderData);
-
-	//// 壁ポリゴンがない場合は何もしない
-	//if (m_wallNum == 0) return;
-
-	//// 壁ポリゴンとの当たり判定処理
-	//// 壁に当たったかどうかのフラグは初期状態では「当たっていない」にしておく
-	//m_isHitFlag = false;
-
-	//// 移動したかどうかで処理を分岐
-	//if (VSize(col->m_rigidbody.GetDir()) != 0.0f)
-	//{
-	//	// 壁ポリゴンの数だけ繰り返し
-	//	for (int i = 0; i < m_wallNum; i++)
-	//	{
-	//		// i番目の壁ポリゴンのアドレスを壁ポリゴンポインタ配列から取得
-	//		m_pPoly = m_pWallPoly[i];
-
-	//		// ポリゴンとプレイヤーが当たっていなかったら次のカウントへ
-	//		// 球体のチェックにすると壁がすり抜けるようになってしまう
-	//		if (!HitCheck_Capsule_Triangle(col->m_rigidbody.GetNextPos(),				//カプセルの下座標
-	//			VAdd(col->m_rigidbody.GetNextPos(),VGet(0.0f, sphere->m_radius, 0.0f)),	//カプセルの上座標
-	//			sphere->m_radius,		//半径
-	//			m_pPoly->Position[0],	//ポリゴンの三頂点の一つ
-	//			m_pPoly->Position[1],	//ポリゴンの三頂点の一つ
-	//			m_pPoly->Position[2]))	//ポリゴンの三頂点の一つ
-	//			continue;
-
-
-	//		// ここにきたらポリゴンとプレイヤーが当たっているということなので、ポリゴンに当たったフラグを立てる
-	//		m_isHitFlag = true;
-
-	//		// 押し出し処理を追加
-	//		PushOutFromCollision(col, m_pPoly->Normal, kColHitSlideLength);
-
-	//		//壁を考慮した移動を外積を使って算出
-	//		VECTOR SlideVec;
-
-	//		// 進行方向ベクトルと壁ポリゴンの法線ベクトルに垂直なベクトルを算出
-	//		SlideVec = VCross(col->m_rigidbody.GetDir(), m_pPoly->Normal);
-
-	//		// 算出したベクトルと壁ポリゴンの法線ベクトルに垂直なベクトルを算出、これが
-	//		// 元の移動成分から壁方向の移動成分を抜いたベクトル
-	//		SlideVec = VCross(m_pPoly->Normal, SlideVec);
-
-	//		// それを移動前の座標に足したものを新たな座標とする
-	//		col->m_rigidbody.SetNextPos(VAdd(col->m_rigidbody.GetPos(), SlideVec));
-
-
-	//		// 新たな移動座標で壁ポリゴンと当たっていないかどうかを判定する
-	//		bool isHitWallPolygon = false;
-	//		for (int j = 0; j < m_wallNum; j++)
-	//		{
-	//			// j番目の壁ポリゴンのアドレスを壁ポリゴンポインタ配列から取得
-	//			m_pPoly = m_pWallPoly[j];
-
-	//			// 当たっていたらループから抜ける
-	//			// 球体のチェックにすると壁がすり抜けるようになってしまう
-	//			if (HitCheck_Capsule_Triangle(col->m_rigidbody.GetNextPos(),				//カプセルの下座標
-	//				VAdd(col->m_rigidbody.GetNextPos(),VGet(0.0f, sphere->m_radius, 0.0f)),	//カプセルの上座標
-	//				sphere->m_radius,		//半径
-	//				m_pPoly->Position[0],	//ポリゴンの三頂点の一つ
-	//				m_pPoly->Position[1],	//ポリゴンの三頂点の一つ
-	//				m_pPoly->Position[2]))	//ポリゴンの三頂点の一つ
-	//			{
-	//				//trueにする
-	//				isHitWallPolygon = true;
-	//				break;
-	//			}
-	//		}
-
-	//		// 全てのポリゴンと当たっていなかったらここでループ終了
-	//		if (!isHitWallPolygon)
-	//		{
-	//			//ヒットフラグを倒す
-	//			m_isHitFlag = false;
-	//			break;
-	//		}
-	//	}
-	//}
-	//else
-	//{
-	//	// 移動していない場合の処理
-
-	//	// 壁ポリゴンの数だけ繰り返し
-	//	for (int i = 0; i < m_wallNum; i++)
-	//	{
-	//		// i番目の壁ポリゴンのアドレスを壁ポリゴンポインタ配列から取得
-	//		m_pPoly = m_pWallPoly[i];
-
-	//		if (HitCheck_Capsule_Triangle(col->m_rigidbody.GetNextPos(),				//カプセルの下座標
-	//			VAdd(col->m_rigidbody.GetNextPos(), VGet(0.0f, sphere->m_radius, 0.0f)),	//カプセルの上座標
-	//			sphere->m_radius,		//半径
-	//			m_pPoly->Position[0],	//ポリゴンの三頂点の一つ
-	//			m_pPoly->Position[1],	//ポリゴンの三頂点の一つ
-	//			m_pPoly->Position[2]))	//ポリゴンの三頂点の一つ
-	//		{
-	//			m_isHitFlag = true;
-	//			break;
-	//		}
-	//	}
-	//}
-
-	//// 壁に当たっていたら壁から押し出す処理を行う
-	//if (m_isHitFlag)
-	//{
-	//	FixPositionWithWallInternal(col);
-	//}
-
-
-/////////////////////////
-	//auto sphere = std::dynamic_pointer_cast<ColliderDataSphere>(col->m_pColliderData);
-
-	//if (m_wallNum == 0) return;
-
-	//m_isHitFlag = false;
-
-	//for (int i = 0; i < m_wallNum; i++)
-	//{
-	//	m_pPoly = m_pWallPoly[i];
-
-	//	if (!HitCheck_Capsule_Triangle(
-	//		col->m_rigidbody.GetNextPos(),
-	//		VAdd(col->m_rigidbody.GetNextPos(), VGet(0.0f, sphere->m_radius, 0.0f)),
-	//		sphere->m_radius,
-	//		m_pPoly->Position[0],
-	//		m_pPoly->Position[1],
-	//		m_pPoly->Position[2]))
-	//		continue;
-
-	//	m_isHitFlag = true;
-
-	//	// 押し出し処理を追加
-	//	PushOutFromCollision(col, m_pPoly->Normal, kColHitSlideLength);
-
-	//	bool isHitWallPolygon = false;
-	//	for (int j = 0; j < m_wallNum; j++)
-	//	{
-	//		m_pPoly = m_pWallPoly[j];
-
-	//		if (HitCheck_Capsule_Triangle(
-	//			col->m_rigidbody.GetNextPos(),
-	//			VAdd(col->m_rigidbody.GetNextPos(), VGet(0.0f, sphere->m_radius, 0.0f)),
-	//			sphere->m_radius,
-	//			m_pPoly->Position[0],
-	//			m_pPoly->Position[1],
-	//			m_pPoly->Position[2]))
-	//		{
-	//			isHitWallPolygon = true;
-	//			break;
-	//		}
-	//	}
-
-	//	if (!isHitWallPolygon)
-	//	{
-	//		m_isHitFlag = false;
-	//		break;
-	//	}
-	//}
-
-	//if (m_isHitFlag)
-	//{
-	//	FixPositionWithWallInternal(col);
-	//}
-
 	//////////////////////// 壁ポリゴンがない場合は何もしない
 
 	auto sphere = std::dynamic_pointer_cast<ColliderDataSphere>(col->m_pColliderData);
@@ -728,58 +508,6 @@ void MyLib::Physics::FixPositionWithWall(std::shared_ptr<Collidable>& col)
 
 void MyLib::Physics::FixPositionWithWallInternal(std::shared_ptr<Collidable>& col)
 {
-	//// 壁からの押し出し処理を試みる最大数だけ繰り返し
-	//for (int i = 0; i < ColInfo::kMaxColHitTryNum; i++)
-	//{
-
-	//	// 当たる可能性のある壁ポリゴンを全て見る
-	//	bool isHitWall = false;
-	//	// 壁ポリゴンの数だけ繰り返し
-	//	for (int j = 0; j < m_wallNum; j++)
-	//	{
-	//		// i番目の壁ポリゴンのアドレスを壁ポリゴンポインタ配列から取得
-	//		m_pPoly = m_pWallPoly[j];
-
-	//		// プレイヤーと当たっているかを判定
-	//		auto sphere = std::dynamic_pointer_cast<ColliderDataSphere>(col->m_pColliderData);
-	//		//auto sphere = std::dynamic_pointer_cast<ColliderDataCapsule>(col->m_pColliderData);
-
-	//		if (!HitCheck_Capsule_Triangle(col->m_rigidbody.GetNextPos(),				//カプセルの下座標
-	//			VAdd(col->m_rigidbody.GetNextPos(), VGet(0.0f, sphere->m_radius, 0.0f)),	//カプセルの上座標
-	//			sphere->m_radius,		//半径
-	//			m_pPoly->Position[0],	//ポリゴンの三頂点の一つ
-	//			m_pPoly->Position[1],	//ポリゴンの三頂点の一つ
-	//			m_pPoly->Position[2]))	//ポリゴンの三頂点の一つ
-	//			continue;
-
-	//		// 当たっていたら規定距離分プレイヤーを壁の法線方向に移動させる
-	//		col->m_rigidbody.SetNextPos(VAdd(col->m_rigidbody.GetNextPos(), VScale(m_pPoly->Normal, kColHitSlideLength)));
-
-	//		// 移動した上で壁ポリゴンと接触しているかどうかを判定
-	//		for (int k = 0; k < m_wallNum; k++)
-	//		{
-	//			// 当たっていたらループを抜ける
-	//			m_pPoly = m_pWallPoly[k];
-
-	//			if (HitCheck_Capsule_Triangle(col->m_rigidbody.GetNextPos(),				//カプセルの下座標
-	//				VAdd(col->m_rigidbody.GetNextPos(), VGet(0.0f, sphere->m_radius, 0.0f)),	//カプセルの上座標
-	//				sphere->m_radius,		//半径
-	//				m_pPoly->Position[0],	//ポリゴンの三頂点の一つ
-	//				m_pPoly->Position[1],	//ポリゴンの三頂点の一つ
-	//				m_pPoly->Position[2]))	//ポリゴンの三頂点の一つ
-	//			{
-	//				isHitWall = true;
-	//				break;
-	//			}
-	//		}
-
-	//		// 全てのポリゴンと当たっていなかったらここでループ終了
-	//		if (!isHitWall) break;
-	//	}
-
-	//	//ループ終了
-	//	if (!isHitWall) break;
-	//}
 
 	auto sphere = std::dynamic_pointer_cast<ColliderDataSphere>(col->m_pColliderData);
 
@@ -859,7 +587,6 @@ void MyLib::Physics::FixNowPositionWithFloor(std::shared_ptr<Collidable>& col)
 
 		//既に当たったポリゴンがあり、且つ今まで検出した床ポリゴンより低い場合は何もしない
 		if (m_isHitFlag && PolyMaxPosY > m_lineRes.Position.y) continue;
-		//if (m_isHitFlag && PolyMaxPosY > mostHeightY) continue;
 
 		//ポリゴンに当たったフラグを立てる
 		m_isHitFlag = true;
@@ -872,16 +599,11 @@ void MyLib::Physics::FixNowPositionWithFloor(std::shared_ptr<Collidable>& col)
 	//床ポリゴンの当たり判定かつ、ジャンプ力が0よりも小さい(下降中の場合)どうかで処理を分岐
 	if (m_isHitFlag)
 	{
-
 		// 接触したポリゴンで一番高いＹ座標をプレイヤーのＹ座標にする
 		col->m_rigidbody.SetNextPos(VGet(col->m_rigidbody.GetNextPos().x, PolyMaxPosY/* + sphere->m_radius*/, col->m_rigidbody.GetNextPos().z));
 		if (m_pPlayer->GetIsJump())
 		{
-
 			col->m_pColliderData->SetIsGround(true);
-
 		}
-		
 	}
-
 }

@@ -37,16 +37,16 @@ namespace
 	constexpr float kSpeedConstant = 1.4f;
 
 	//最小移動速度
-	constexpr float kNormalMinSpeed = 0.5f * kSpeedConstant;
-	constexpr float kPowerMinSpeed = 0.3f * kSpeedConstant;
-	constexpr float kSpeedMinSpeed = 0.7f * kSpeedConstant;
-	constexpr float kShotMinSpeed = 0.4f * kSpeedConstant;
+	constexpr float kNormalMinSpeed = 0.35f * kSpeedConstant;
+	constexpr float kPowerMinSpeed = 0.25f * kSpeedConstant;
+	constexpr float kSpeedMinSpeed = 0.45f * kSpeedConstant;
+	constexpr float kShotMinSpeed = 0.3f * kSpeedConstant;
 
 	//最大移動速度
-	constexpr float kNormalMaxSpeed = 0.7f * kSpeedConstant;
-	constexpr float kPowerMaxSpeed = 0.5f * kSpeedConstant;
-	constexpr float kSpeedMaxSpeed = 0.9f * kSpeedConstant;
-	constexpr float kShotMaxSpeed = 0.6f * kSpeedConstant;
+	constexpr float kNormalMaxSpeed = 0.45f * kSpeedConstant;
+	constexpr float kPowerMaxSpeed = 0.35f * kSpeedConstant;
+	constexpr float kSpeedMaxSpeed = 0.55f * kSpeedConstant;
+	constexpr float kShotMaxSpeed = 0.4f * kSpeedConstant;
 
 	//ダッシュスピード
 	constexpr float kNormalDashSpeed = 1.0f * kSpeedConstant;
@@ -132,7 +132,7 @@ namespace
 	constexpr float kStaminaActionIncreaseSpeed = 0.8f;
 
 	//MPの減る値
-	constexpr float kMpDiminishNum = 30.0f;
+	constexpr float kMpDiminishNum = 100.0f;
 	constexpr float kMpIncreaseNum = 40.0f;
 
 	constexpr float kShadowSize = 5.0f;
@@ -152,7 +152,6 @@ namespace
 
 	constexpr int kAttackFrame = 30;
 	constexpr int kAttackXFrame = 20;
-	//constexpr int kChargeTimeMax = 60;
 
 	//プレイヤーの種類によって変わる当たり判定の半径
 	constexpr float kNormalAttackXRadius = 6.0f;
@@ -191,6 +190,8 @@ namespace
 	constexpr int kMoveCountNum = 15;
 	constexpr int kWalkCountNum = 25;
 
+	constexpr int kAttackCountNum = 2;
+
 }
 
 Player::Player() :
@@ -213,6 +214,7 @@ Player::Player() :
 	m_cameraDirection(VGet(0, 0, 0)),
 	m_analogX(0),
 	m_analogZ(0),
+	m_rate(0),
 	m_hp(kMaxHp),
 	m_mp(kMaxMp),
 	m_stamina(kMaxStamina),
@@ -221,7 +223,6 @@ Player::Player() :
 	m_isDash(false),
 	m_isStamina(false),
 	m_isMp(false),
-	m_isUseMp(false),
 	m_multiAttack(0),
 	m_isNextAttackFlag(false),
 	m_isLockOn(false),
@@ -267,6 +268,8 @@ Player::Player() :
 	auto circleColliderData = std::dynamic_pointer_cast<MyLib::ColliderDataSphere>(m_pColliderData);
 	circleColliderData->m_radius = kInitRadius;
 	m_radius = circleColliderData->m_radius;
+
+	m_attackTime = 0;
 
 	m_hitRadius = kHitRadius;
 	m_attackXRadius = 0.0f;
@@ -341,6 +344,30 @@ void Player::Update(std::shared_ptr<MyLib::Physics> physics, PlayerWeapon& weapo
 	DamageUpdate();
 	//プレイヤーの当たり判定座標の更新
 	CollisionPosUpdate();
+
+	//攻撃が入った場合
+	if (m_isAttack)
+	{
+		if (IsPlayerAttackHit(m_attackXPos, m_attackXRadius))
+		{
+			m_attackTime++;
+			if (m_attackTime > kAttackCountNum)
+			{
+				m_isAttack = false;
+				m_attackTime = 0;
+			}
+		}
+		else if (IsPlayerAttackHit(m_attackYPos, m_attackYRadius))
+		{
+			m_attackTime++;
+			if (m_attackTime > kAttackCountNum)
+			{
+				m_isAttack = false;
+				m_attackTime = 0;
+			}
+		}
+
+	}
 
 	//ボスの座標を代入
 	m_isLockOn = isLockOn;
@@ -586,11 +613,12 @@ void Player::IdleUpdate()
 	//攻撃Y(スピードタイプのみショートカット)
 	else if (Pad::IsPress(kPadButtonY) && m_playerKind == e_PlayerKind::kSpeedPlayer && m_isFaceUse && !m_isStamina && !m_isMp)
 	{
-		m_isUseMp = true;
 		m_isButtonPush = false;
 		m_buttonKind = e_ButtonKind::kNone;
 		OnAttackY();
 	}
+
+
 
 	//プレイヤーを変える関数
 	FaceUse();
@@ -677,7 +705,6 @@ void Player::LockOnIdleUpdate()
 	//攻撃Y(スピードタイプのみショートカット)
 	else if (Pad::IsPress(kPadButtonY) && m_playerKind == e_PlayerKind::kSpeedPlayer && m_isFaceUse && !m_isStamina && !m_isMp)
 	{
-		m_isUseMp = true;
 		m_isButtonPush = false;
 		m_buttonKind = e_ButtonKind::kNone;
 		OnAttackY();
@@ -748,7 +775,6 @@ void Player::WalkUpdate()
 	//攻撃Y(スピードタイプのみショートカット)
 	else if (Pad::IsPress(kPadButtonY) && m_playerKind == e_PlayerKind::kSpeedPlayer && m_isFaceUse && !m_isStamina && !m_isMp)
 	{
-		m_isUseMp = true;
 		m_isButtonPush = false;
 		m_buttonKind = e_ButtonKind::kNone;
 		OnAttackY();
@@ -824,7 +850,6 @@ void Player::LockOnWalkUpdate()
 	//攻撃Y(スピードタイプのみショートカット)
 	else if (Pad::IsPress(kPadButtonY) && m_playerKind == e_PlayerKind::kSpeedPlayer && m_isFaceUse && !m_isStamina && !m_isMp)
 	{
-		m_isUseMp = true;
 		m_isButtonPush = false;
 		m_buttonKind = e_ButtonKind::kNone;
 		OnAttackY();
@@ -1019,7 +1044,6 @@ void Player::DashUpdate()
 	//攻撃Y(スピードタイプのみショートカット)
 	else if (Pad::IsPress(kPadButtonY) && m_playerKind == e_PlayerKind::kSpeedPlayer && m_isFaceUse && !m_isStamina && !m_isMp)
 	{
-		m_isUseMp = true;
 		m_isButtonPush = false;
 		m_buttonKind = e_ButtonKind::kNone;
 		OnAttackY();
@@ -1075,8 +1099,6 @@ void Player::JumpUpdate()
 	{
 		OnFall();
 	}
-
-	//Move();
 
 	//アナログスティックを取得
 	GetJoypadAnalogInput(&m_analogX, &m_analogZ, DX_INPUT_PAD1);
@@ -1410,7 +1432,6 @@ void Player::DashFallUpdate()
 
 	if (m_jumpCount < 15)
 	{
-		//vel.y -= kGravityPower * 0.75f;
 		vel.y += kMinJumpPower;
 	}
 	else if (m_jumpCount < 30)
@@ -1546,7 +1567,6 @@ void Player::AttackCharge()
 	{
 		m_chargeTime = 0;
 
-		m_isUseMp = true;
 		OnAttackY();
 	}
 	else if(Pad::IsRelase(kPadButtonY) && m_chargeTime < kChargeTimeMax)
@@ -1631,21 +1651,6 @@ void Player::AttackYUpdate()
 
 	m_attackFrame++;
 	m_stamina += kStaminaIncreaseSpeed;
-
-	if (m_isUseMp)
-	{
-		m_mp -= kMpDiminishNum;
-		m_isUseMp = false;
-	}
-
-	if (m_attackFrame > kAttackFrame)
-	{
-		m_isAttack = true;
-	}
-	else if (m_attackFrame > 40)
-	{
-		m_isAttack = false;
-	}
 
 	//アニメーションが終わったら待機状態に遷移
 	if (m_pAnim->IsLoop())
@@ -1926,6 +1931,8 @@ void Player::Move()
 	rate = min(rate, 1.0f);
 	rate = max(rate, 0.0f);
 
+	m_rate = rate;
+
 	float speed = 0;
 
 	//動いている間
@@ -1949,7 +1956,7 @@ void Player::Move()
 		if (m_playerKind == e_PlayerKind::kPowerPlayer && m_isFaceUse)
 		{
 			//スティックの押し加減でプレイヤーのスピードを変える
-			if (rate <= 0.6f && rate > 0.0f);
+			if (rate <= 0.6f && rate > 0.0f)
 			{
 				speed = kPowerMinSpeed * rate;
 				move = VScale(move, speed);
@@ -1963,7 +1970,7 @@ void Player::Move()
 		if (m_playerKind == e_PlayerKind::kSpeedPlayer && m_isFaceUse)
 		{
 			//スティックの押し加減でプレイヤーのスピードを変える
-			if (rate <= 0.6f && rate > 0.0f);
+			if (rate <= 0.6f && rate > 0.0f)
 			{
 				speed = kSpeedMinSpeed * rate;
 				move = VScale(move, speed);
@@ -1977,7 +1984,7 @@ void Player::Move()
 		if (m_playerKind == e_PlayerKind::kShotPlayer && m_isFaceUse)
 		{
 			//スティックの押し加減でプレイヤーのスピードを変える
-			if (rate <= 0.6f && rate > 0.0f);
+			if (rate <= 0.6f && rate > 0.0f)
 			{
 				speed = kShotMinSpeed * rate;
 				move = VScale(move, speed);
@@ -1991,7 +1998,7 @@ void Player::Move()
 		if (m_playerKind == e_PlayerKind::kRassPlayer && m_isFaceUse)
 		{
 			//スティックの押し加減でプレイヤーのスピードを変える
-			if (rate <= 0.6f && rate > 0.0f);
+			if (rate <= 0.6f && rate > 0.0f)
 			{
 				speed = kNormalMinSpeed * rate;
 				move = VScale(move, speed);
@@ -2006,7 +2013,7 @@ void Player::Move()
 		if (!m_isFaceUse)
 		{
 			//スティックの押し加減でプレイヤーのスピードを変える
-			if (rate <= 0.6f && rate > 0.0f);
+			if (rate <= 0.6f && rate > 0.0f)
 			{
 				speed = kNormalMinSpeed * rate;
 				move = VScale(move, speed);
@@ -2111,6 +2118,8 @@ void Player::OnIdle()
 	//リセット処理
 	SetOnReset();
 
+	m_isButtonPush = false;
+
 	//アイドルアニメーションにチェンジ
 	m_pAnim->ChangeAnim(kAnimIdle);
 	m_updateFunc = &Player::IdleUpdate;
@@ -2158,7 +2167,6 @@ void Player::OnDash()
 	m_pAnim->ChangeAnim(kAnimDash);
 	m_updateFunc = &Player::DashUpdate;
 }
-
 
 void Player::OnAttackX()
 {
@@ -2217,19 +2225,18 @@ void Player::OnAttackY()
 	if (m_playerKind == Game::e_PlayerKind::kShotPlayer && m_isFaceUse)
 	{
 		EffectManager::GetInstance().CreateEffect("shotPlayerAttackYEffect", VGet(m_attackYPos.x, m_attackYPos.y - 4.0f, m_attackYPos.z));
-		m_isAttack = false;
 	}
 	else if (m_playerKind == Game::e_PlayerKind::kSpeedPlayer && m_isFaceUse)
 	{
 		EffectManager::GetInstance().CreateEffect("speedPlayerAttackYEffect", m_attackYPos);
-		m_isAttack = true;
 	}
 	else
 	{
 		EffectManager::GetInstance().CreateEffect("attackYEffect", m_pos);
-		m_isAttack = true;
 	}
 
+	m_mp -= kMpDiminishNum;
+	m_isAttack = true;
 	m_attackFrame = 0;
 	m_isButtonPush = true;
 	m_buttonKind = e_ButtonKind::kYbutton;
@@ -2441,14 +2448,25 @@ void Player::StatusUpdate()
 	//MPが0以下になったら
 	if (m_mp <= 0)
 	{
-		m_isMp = true;
 		m_mp = 0;
+		m_isMp = true;
 	}
 
 	//MPが最大値を超えたら
 	if (m_mp > kMaxMp)
 	{
 		m_mp = kMaxMp;
+		m_isMp = false;
+	}
+
+	//MP回復速度
+	if (m_isMp)
+	{
+		m_mp += 0.15f;
+	}
+	else
+	{
+		m_mp += 0.1f;
 	}
 
 	//スタミナ関連
@@ -2469,6 +2487,9 @@ void Player::StatusUpdate()
 	{
 		m_isStamina = false;
 	}
+
+
+
 }
 
 void Player::FaceSelect()
