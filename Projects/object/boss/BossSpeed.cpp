@@ -76,6 +76,20 @@ namespace
 
 	constexpr int kDamageResetTime = 10;
 
+	//プレイヤーの種類によってヒットした時のダメージ量(通常攻撃)
+	constexpr float kHitDamageNum = 30.0f;
+	constexpr float kHitDamagePowerNum = kHitDamageNum * 2.0f;
+	constexpr float kHitDamageSpeedNum = kHitDamageNum * 0.75;
+	constexpr float kHitDamageShotNum = kHitDamageNum * 0.5f;
+	constexpr float kHitDamageRassNum = kHitDamageNum * 2.5f;
+
+	//プレイヤーの種類によってヒットした時のダメージ量(強攻撃)
+	constexpr float kHitTwoDamageNum = kHitDamageNum * 2.0f;
+	constexpr float kHitTwoDamagePowerNum = kHitDamagePowerNum * 2.0f;
+	constexpr float kHitTwoDamageSpeedNum = kHitDamageSpeedNum * 2.0f;
+	constexpr float kHitTwoDamageShotNum = kHitDamageShotNum * 2.0f;
+	constexpr float kHitTwoDamageRassNum = kHitDamageRassNum * 2.0f;
+
 }
 
 BossSpeed::BossSpeed() :
@@ -820,24 +834,24 @@ void BossSpeed::OnHitOneDamage()
 
 	if (m_playerKind == e_PlayerKind::kPowerPlayer && m_isPlayerFace)
 	{
-		m_hp -= 40.0f;
+		m_hp -= kHitDamagePowerNum;
 	}
 	if (m_playerKind == e_PlayerKind::kSpeedPlayer && m_isPlayerFace)
 	{
-		m_hp -= 15.0f;
+		m_hp -= kHitDamageSpeedNum;
 	}
 	if (m_playerKind == e_PlayerKind::kShotPlayer && m_isPlayerFace)
 	{
-		m_hp -= 10.0f;
+		m_hp -= kHitDamageShotNum;
 	}
 	if (m_playerKind == e_PlayerKind::kRassPlayer && m_isPlayerFace)
 	{
-		m_hp -= 50.0f;
+		m_hp -= kHitDamageRassNum;
 	}
 
 	if (!m_isPlayerFace)
 	{
-		m_hp -= 20.0f;
+		m_hp -= kHitDamageNum;
 	}
 
 	m_attackFrame = 0;
@@ -860,24 +874,24 @@ void BossSpeed::OnHitTwoDamage()
 
 	if (m_playerKind == e_PlayerKind::kPowerPlayer && m_isPlayerFace)
 	{
-		m_hp -= 80.0f;
+		m_hp -= kHitTwoDamagePowerNum;
 	}
 	if (m_playerKind == e_PlayerKind::kSpeedPlayer && m_isPlayerFace)
 	{
-		m_hp -= 40.0f;
+		m_hp -= kHitTwoDamageSpeedNum;
 	}
 	if (m_playerKind == e_PlayerKind::kShotPlayer && m_isPlayerFace)
 	{
-		m_hp -= 40.0f;
+		m_hp -= kHitTwoDamageShotNum;
 	}
 	if (m_playerKind == e_PlayerKind::kRassPlayer && m_isPlayerFace)
 	{
-		m_hp -= 100.0f;
+		m_hp -= kHitTwoDamageRassNum;
 	}
 
 	if (!m_isPlayerFace)
 	{
-		m_hp -= 50.0f;
+		m_hp -= kHitTwoDamageNum;
 	}
 
 	m_attackFrame = 0;

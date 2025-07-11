@@ -69,6 +69,19 @@ namespace
 	constexpr int kAttackKind = 3;
 	constexpr int kAvoidKind = 2;
 
+	//プレイヤーの種類によってヒットした時のダメージ量(通常攻撃)
+	constexpr float kHitDamageNum = 25.0f;
+	constexpr float kHitDamagePowerNum = kHitDamageNum * 2.0f;
+	constexpr float kHitDamageSpeedNum = kHitDamageNum * 0.75;
+	constexpr float kHitDamageShotNum = kHitDamageNum * 0.5f;
+	constexpr float kHitDamageRassNum = kHitDamageNum * 2.5f;
+
+	//プレイヤーの種類によってヒットした時のダメージ量(強攻撃)
+	constexpr float kHitTwoDamageNum = kHitDamageNum * 2.0f;
+	constexpr float kHitTwoDamagePowerNum = kHitDamagePowerNum * 2.0f;
+	constexpr float kHitTwoDamageSpeedNum = kHitDamageSpeedNum * 2.0f;
+	constexpr float kHitTwoDamageShotNum = kHitDamageShotNum * 2.0f;
+	constexpr float kHitTwoDamageRassNum = kHitDamageRassNum * 2.0f;
 
 	constexpr int kDamageResetTime = 10;
 
@@ -955,27 +968,26 @@ void BossShot::OnHitOneDamage()
 
 	if (m_playerKind == e_PlayerKind::kPowerPlayer && m_isPlayerFace)
 	{
-		m_hp -= 40.0f;
+		m_hp -= kHitDamagePowerNum;
 	}
 	if (m_playerKind == e_PlayerKind::kSpeedPlayer && m_isPlayerFace)
 	{
-		m_hp -= 15.0f;
+		m_hp -= kHitDamageSpeedNum;
 	}
 	if (m_playerKind == e_PlayerKind::kShotPlayer && m_isPlayerFace)
 	{
-		m_hp -= 10.0f;
+		m_hp -= kHitDamageShotNum;
 	}
 	if (m_playerKind == e_PlayerKind::kRassPlayer && m_isPlayerFace)
 	{
-		m_hp -= 50.0f;
+		m_hp -= kHitDamageRassNum;
 	}
 
 	if (!m_isPlayerFace)
 	{
-		m_hp -= 20.0f;
+		m_hp -= kHitDamageNum;
 	}
 
-	m_hp -= 10.0f;
 	m_isHit = true;
 	m_isAttack = false;
 	m_attackFrame = 0;
@@ -983,10 +995,10 @@ void BossShot::OnHitOneDamage()
 	auto pos = m_rigidbody.GetPos();
 	EffectManager::GetInstance().CreateEffect("bossHitEffect", VGet(pos.x, pos.y + 6.0f, pos.z));
 	m_pAnim->ChangeAnim(kAnimCoolTime);
-	m_updateFunc = &BossShot::HitOneDamageUpdate;
+	//m_updateFunc = &BossShot::HitOneDamageUpdate;
 
 	//攻撃判定がバグらなければこっちの方がボスの難易度が上がってよい
-	//m_updateFunc = &BossShot::IdleUpdate;
+	m_updateFunc = &BossShot::IdleUpdate;
 }
 
 void BossShot::OnHitTwoDamage()
@@ -996,27 +1008,26 @@ void BossShot::OnHitTwoDamage()
 
 	if (m_playerKind == e_PlayerKind::kPowerPlayer && m_isPlayerFace)
 	{
-		m_hp -= 80.0f;
+		m_hp -= kHitTwoDamagePowerNum;
 	}
 	if (m_playerKind == e_PlayerKind::kSpeedPlayer && m_isPlayerFace)
 	{
-		m_hp -= 40.0f;
+		m_hp -= kHitTwoDamageSpeedNum;
 	}
 	if (m_playerKind == e_PlayerKind::kShotPlayer && m_isPlayerFace)
 	{
-		m_hp -= 40.0f;
+		m_hp -= kHitTwoDamageShotNum;
 	}
 	if (m_playerKind == e_PlayerKind::kRassPlayer && m_isPlayerFace)
 	{
-		m_hp -= 100.0f;
+		m_hp -= kHitTwoDamageRassNum;
 	}
 
 	if (!m_isPlayerFace)
 	{
-		m_hp -= 50.0f;
+		m_hp -= kHitTwoDamageNum;
 	}
 
-	m_hp -= 30.0f;
 	m_isHit = true;
 	m_isAttack = false;
 	m_attackFrame = 0;
@@ -1024,10 +1035,10 @@ void BossShot::OnHitTwoDamage()
 	auto pos = m_rigidbody.GetPos();
 	EffectManager::GetInstance().CreateEffect("bossHitEffect", VGet(pos.x, pos.y + 6.0f, pos.z));
 	m_pAnim->ChangeAnim(kAnimCoolTime);
-	m_updateFunc = &BossShot::HitTwoDamageUpdate;
+	//m_updateFunc = &BossShot::HitTwoDamageUpdate;
 
 	//攻撃判定がバグらなければこっちの方がボスの難易度が上がってよい
-	//m_updateFunc = &BossShot::IdleUpdate;
+	m_updateFunc = &BossShot::IdleUpdate;
 
 }
 

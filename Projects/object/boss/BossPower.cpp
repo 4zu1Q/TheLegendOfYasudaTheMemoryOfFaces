@@ -92,12 +92,14 @@ namespace
 	constexpr float kEffectPosY = 25.0f;
 	constexpr float kHitEffectPosY = 15.0f;
 
+	//プレイヤーの種類によってヒットした時のダメージ量(通常攻撃)
 	constexpr float kHitDamageNum = 20.0f;
-	constexpr float kHitDamagePowerNum = 40.0f;
-	constexpr float kHitDamageSpeedNum = 15.0f;
-	constexpr float kHitDamageShotNum = 10.0f;
-	constexpr float kHitDamageRassNum = 50.0f;
+	constexpr float kHitDamagePowerNum = kHitDamageNum * 2.0f;
+	constexpr float kHitDamageSpeedNum = kHitDamageNum * 0.75;
+	constexpr float kHitDamageShotNum = kHitDamageNum * 0.5f;
+	constexpr float kHitDamageRassNum = kHitDamageNum * 2.5f;
 
+	//プレイヤーの種類によってヒットした時のダメージ量(強攻撃)
 	constexpr float kHitTwoDamageNum = kHitDamageNum * 2.0f;
 	constexpr float kHitTwoDamagePowerNum = kHitDamagePowerNum * 2.0f;
 	constexpr float kHitTwoDamageSpeedNum = kHitDamageSpeedNum * 2.0f;
